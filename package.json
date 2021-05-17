@@ -44,12 +44,6 @@
     "eject": "react-scripts eject",
     "build:android": "ionic capacitor copy android"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -63,7 +57,10 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "2.4.7"
+    "@capacitor/cli": "2.4.7",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0"
   },
   "description": "An Ionic project"
 }
