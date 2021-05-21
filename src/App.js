@@ -23,8 +23,8 @@ import '@ionic/react/css/display.css'
 
 /* Theme variables */
 import './theme/variables.css'
-import { Booking, Empty, Explore } from './pages'
-import TabBar from './components/shared/TabBar'
+import { Booking, Empty, Explore, Wishlist } from './pages'
+import { TabBar } from './components'
 import { MeQuery } from './graphql/queries/guides'
 
 const client = new ApolloClient({
@@ -47,7 +47,7 @@ const App = () => (
                 <TabBar>
                     <IonRouterOutlet>
                         <Route exact path="/explore" component={Explore} />
-                        <Route exact path="/wishlist" component={Empty} />
+                        <Route exact path="/wishlist" component={Wishlist} />
                         <Route exact path="/bookings" component={Booking} />
                         <Route exact path="/chats" component={Empty} />
                         <Route exact path="/profile" component={Empty} />
