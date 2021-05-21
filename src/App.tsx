@@ -20,7 +20,7 @@ import '@ionic/react/css/display.css'
 
 /* Theme variables */
 import './theme/variables.css'
-import { Booking, Empty, Explore } from './pages'
+import { Wishlist, Empty, Explore } from './pages'
 import TabBar from './components/shared/TabBar'
 
 const App: React.FC = () => (
@@ -29,7 +29,7 @@ const App: React.FC = () => (
             <TabBar>
                 <IonRouterOutlet>
                     <Route exact path="/explore" component={Explore} />
-                    <Route exact path="/wishlist" component={Empty} />
+                    <Route exact path="/wishlist" component={Wishlist} />
                     <Route exact path="/bookings" component={Empty} />
                     <Route exact path="/chats" component={Empty} />
                     <Route exact path="/profile" component={Empty} />
