@@ -3,7 +3,7 @@ import { Redirect, Route } from 'react-router-dom'
 import { IonApp, IonRouterOutlet } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { ApolloClient, InMemoryCache } from '@apollo/client'
-import { ApolloProvider, useQuery } from '@apollo/client/react'
+import { ApolloProvider } from '@apollo/client/react'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css'
@@ -25,7 +25,6 @@ import '@ionic/react/css/display.css'
 import './theme/variables.css'
 import { Booking, Empty, Explore, Wishlist } from './pages'
 import { TabBar } from './components'
-import { MeQuery } from './graphql/queries/guides'
 
 const client = new ApolloClient({
     uri: process.env.REACT_APP_GRAPHQL,
@@ -33,14 +32,6 @@ const client = new ApolloClient({
 })
 
 const App = () => (
-    // const {loading, error, data} = useQuery(MeQuery)
-
-    // if (loading ) return <Spinner/>
-
-    // if (error) //redirect
-
-    // return <>{data}</>
-
     <IonApp>
         <ApolloProvider client={client}>
             <IonReactRouter>
