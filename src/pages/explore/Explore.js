@@ -10,23 +10,48 @@ import {
     IonCard,
     IonSlides,
     IonSlide,
+    IonButton,
 } from '@ionic/react'
 import { searchOutline } from 'ionicons/icons'
 import styled from 'styled-components'
+import Carousel from 'react-multi-carousel'
+import {
+    ImageCardSmallCarousel,
+    ImageCardMediumCarousel,
+    ImageCardSmall,
+    ImageCardMedium,
+} from '../../components/ImageCard'
 
-const DestinationImage = styled(IonCard)`
-    width: 90px;
-    height: 90px;
-    background-image: url(${(props) => props.src});
-`
+const data = [
+    {
+        uri: 'https://picsum.photos/400',
+        name: 'Auckland City',
+        description: '25 Guides',
+    },
+    {
+        uri: 'https://picsum.photos/400',
+        name: 'MOTAT',
+        description: '10 Guides',
+    },
+    {
+        uri: 'https://picsum.photos/400',
+        name: "Neville's House",
+        description: '103 Guides',
+    },
+    {
+        uri: 'https://picsum.photos/400',
+        name: 'Auckland City',
+        description: '25 Guides',
+    },
+    {
+        uri: 'https://picsum.photos/400',
+        name: 'MOTAT',
+        description: '10 Guides',
+    },
+]
 
 const Booking = () => {
     const [search, setSearch] = useState('')
-    const slideOpts = {
-        initialSlide: 1,
-        speed: 400,
-    }
-    const test = [1, 2, 3]
     return (
         <IonContent>
             <IonGrid
@@ -74,31 +99,129 @@ const Booking = () => {
                             position: 'relative',
                             width: 30,
                             top: 15,
-                            left: 100,
+                            left: 10,
                         }}
                     />
                     <IonInput
                         value={search}
                         placeholder="Where are you going?"
-                        style={{ fontSize: 14, width: 100 }}
+                        style={{ fontSize: 14, width: 100, marginRight: 30 }}
                         onIonChange={(e) => setSearch(e.target.value)}
                     />
                 </IonRow>
             </IonGrid>
-            <IonGrid style={{ padding: '0 20 0 20' }}>
+            <IonGrid style={{ padding: '20px 20px 20px 20px' }}>
                 <IonText color="primary">
-                    <h2>Explore nearby</h2>
+                    <h2 style={{ fontWeight: 'bold', fontSize: 24 }}>
+                        Explore nearby
+                    </h2>
                 </IonText>
-                <IonSlides pager options={slideOpts}>
-                    {test.map((card) => (
-                        <IonSlide>
-                            <DestinationImage src="https://picsum.photos/90" />
-                        </IonSlide>
+                <ImageCardSmallCarousel>
+                    {data.map((card) => (
+                        <ImageCardSmall
+                            uri={card.uri}
+                            key={card.name}
+                            name={card.name}
+                            description={card.description}
+                        />
                     ))}
-                </IonSlides>
+                </ImageCardSmallCarousel>
                 <IonText color="primary">
-                    <h2>Go anywhere</h2>
+                    <h2
+                        style={{
+                            fontWeight: 'bold',
+                            fontSize: 24,
+                            marginTop: 47,
+                        }}
+                    >
+                        Go anywhere
+                    </h2>
                 </IonText>
+                <ImageCardMediumCarousel>
+                    {data.map((card) => (
+                        <ImageCardMedium
+                            uri={card.uri}
+                            key={card.name}
+                            name={card.name}
+                        />
+                    ))}
+                </ImageCardMediumCarousel>
+                <IonGrid
+                    style={{
+                        backgroundColor: '#171717',
+                        borderRadius: 15,
+                        overflow: 'hidden',
+                        padding: '0',
+                        marginTop: 47,
+                    }}
+                >
+                    <IonCol>
+                        <IonText
+                            style={{
+                                color: 'white',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <h2 style={{ fontWeight: 'bold' }}>
+                                Become a Guide
+                            </h2>
+                            <p
+                                style={{
+                                    padding: '14px 20px 14px 20px',
+                                    fontSize: 18,
+                                }}
+                            >
+                                Earn extra income while visiting your favourite
+                                destinations
+                            </p>
+                        </IonText>
+                        <IonRow
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <IonButton
+                                color="light"
+                                style={{
+                                    width: 188,
+                                    height: 48,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                }}
+                            >
+                                Learn more
+                            </IonButton>
+                        </IonRow>
+                        <img
+                            alt="learn more"
+                            src="https://picsum.photos/400"
+                            width="100%"
+                            height="150"
+                            style={{ objectFit: 'cover', marginTop: 33 }}
+                        />
+                    </IonCol>
+                </IonGrid>
+                <IonText color="primary">
+                    <h2
+                        style={{
+                            fontWeight: 'bold',
+                            fontSize: 24,
+                            marginTop: 47,
+                        }}
+                    >
+                        Discover Experiences
+                    </h2>
+                </IonText>
+                <ImageCardMediumCarousel>
+                    {data.map((card) => (
+                        <ImageCardMedium
+                            uri={card.uri}
+                            key={card.name}
+                            name={card.name}
+                        />
+                    ))}
+                </ImageCardMediumCarousel>
             </IonGrid>
         </IonContent>
     )

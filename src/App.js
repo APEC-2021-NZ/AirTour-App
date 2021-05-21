@@ -7,6 +7,8 @@ import { ApolloProvider } from '@apollo/client/react'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css'
+import 'react-multi-carousel/lib/styles.css'
+import './App.css'
 
 /* Basic CSS for apps built with Ionic */
 import '@ionic/react/css/normalize.css'
