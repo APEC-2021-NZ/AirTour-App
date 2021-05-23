@@ -41,7 +41,9 @@ const firebaseConfig = {
     measurementId: 'G-4324QXGC5X',
 }
 
-firebase.initializeApp(firebaseConfig)
+if (firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig)
+}
 
 const httpLink = createHttpLink({
     uri: '/graphql',

@@ -1,5 +1,20 @@
-import { IonButton, IonContent, IonGrid, IonText } from '@ionic/react'
+import {
+    IonButton,
+    IonContent,
+    IonGrid,
+    IonItem,
+    IonList,
+    IonText,
+    IonIcon,
+    IonLabel,
+} from '@ionic/react'
 import React, { useContext } from 'react'
+import {
+    documentTextOutline,
+    helpOutline,
+    personOutline,
+    settingsOutline,
+} from 'ionicons/icons'
 import { AuthContext } from '../../components/Auth'
 
 const buttonStyle = {
@@ -10,6 +25,21 @@ const buttonStyle = {
     '--border-width': '2px',
     '--background-activated': 'white',
     width: '100%',
+}
+
+const textStyle = {
+    left: -1,
+    top: 16,
+
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: 200,
+    fontSize: 18,
+    display: 'flex',
+    alignItems: 'center',
+    letterSpacing: '0.04em',
+
+    color: '#000000',
 }
 
 const Unauthenticated = ({ showModal }) => (
@@ -76,6 +106,25 @@ const Authenticated = ({ logout }) => (
         <IonButton onClick={logout} fill="outline" style={buttonStyle}>
             Log out
         </IonButton>
+        <IonList>
+            <IonItem />
+            <IonItem button>
+                <IonIcon slot="end" icon={settingsOutline} />
+                <IonLabel style={textStyle}>Settings</IonLabel>
+            </IonItem>
+            <IonItem button>
+                <IonIcon slot="end" icon={personOutline} />
+                <IonLabel style={textStyle}>Learn about touring</IonLabel>
+            </IonItem>
+            <IonItem button>
+                <IonIcon slot="end" icon={helpOutline} />
+                <IonLabel style={textStyle}>Get Help</IonLabel>
+            </IonItem>
+            <IonItem button>
+                <IonIcon slot="end" icon={documentTextOutline} />
+                <IonLabel style={textStyle}>Terms of Serice</IonLabel>
+            </IonItem>
+        </IonList>
     </>
 )
 
