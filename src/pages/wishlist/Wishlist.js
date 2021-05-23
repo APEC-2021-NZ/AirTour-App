@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     IonContent,
     IonGrid,
@@ -6,8 +6,11 @@ import {
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonButton,
 } from '@ionic/react'
-import { TourGuideColumnCard } from '../../components'
+import { useQuery } from '@apollo/client/react'
+import { TourGuideColumnCard, LoginPopup } from '../../components'
+import { MeQuery } from '../../graphql/queries/guides'
 
 const Wishlist = () => {
     const tourGuides = new Array(20).fill({
@@ -19,21 +22,35 @@ const Wishlist = () => {
         numReviews: 21,
     })
 
+    const [showModal, setShowModal] = useState(false)
+
+    const { loading, error, data } = useQuery(MeQuery)
+
+    console.log('result', { loading, error, data })
+
     return (
-        <IonContent>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Wishlist</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonGrid style={{ padding: '20' }}>
-                <IonRow>
-                    {tourGuides.map((value) => (
-                        <TourGuideColumnCard value={value} />
-                    ))}
-                </IonRow>
-            </IonGrid>
-        </IonContent>
+        <>
+            <IonContent>
+                <IonHeader>
+                    <IonToolbar>
+                        <IonTitle>Wishlist</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                <IonGrid style={{ padding: '20' }}>
+                    <IonRow>
+                        <IonButton onClick={() => setShowModal(true)}>
+                            Login
+                        </IonButton>
+                    </IonRow>
+                    <IonRow>
+                        {tourGuides.map((value) => (
+                            <TourGuideColumnCard value={value} />
+                        ))}
+                    </IonRow>
+                </IonGrid>
+            </IonContent>
+            <LoginPopup showModal={showModal} setShowModal={setShowModal} />
+        </>
     )
 }
 

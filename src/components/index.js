@@ -1,4 +1,3 @@
-import TabBar from './shared/TabBar'
-import TourGuideColumnCard from './shared/TourGuideColumnCard'
+import { TourGuideColumnCard, LoginPopup, TabBar } from './shared'
 
-export { TabBar, TourGuideColumnCard }
+export { TabBar, TourGuideColumnCard, LoginPopup }
