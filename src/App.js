@@ -2,8 +2,10 @@ import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import { IonApp, IonRouterOutlet } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { ApolloProvider } from '@apollo/client/react'
+import { firebase } from './instances'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css'
@@ -28,8 +30,23 @@ import './theme/variables.css'
 import { Booking, Empty, Explore, Wishlist } from './pages'
 import { TabBar } from './components'
 
-const client = new ApolloClient({
+const httpLink = createHttpLink({
     uri: process.env.REACT_APP_GRAPHQL,
+})
+
+const authLink = setContext(async (_, { headers }) => {
+    const token = await firebase.auth().currentUser.getIdToken()
+
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
+        },
+    }
+})
+
+const client = new ApolloClient({
+    link: authLink.concat(httpLink),
     cache: new InMemoryCache(),
 })
 
