@@ -52,14 +52,7 @@ const authLink = setContext(async (_, { headers }) => {
 
     if (firebase.auth().currentUser) {
         token = await firebase.auth().currentUser.getIdToken()
-    } else {
-        const userCredential = await firebase
-            .auth()
-            .signInWithEmailAndPassword('falb418@aucklanduni.ac.nz', 'abc123')
-        token = await userCredential.user.getIdToken()
     }
-
-    console.log(token)
 
     return {
         headers: {
