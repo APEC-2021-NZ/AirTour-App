@@ -3,5 +3,5 @@
 }
 
 .ion-page {
-    overflow: scroll;
+    overflow: auto;
 }

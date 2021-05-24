@@ -21,6 +21,7 @@ import {
     ImageCardMedium,
 } from '../../components/ImageCard'
 import Search from './Search'
+import Footer from '../../components/Footer'
 
 const data = [
     {
@@ -55,7 +56,9 @@ const Booking = () => {
     const [showSearch, setShowSearch] = useState(false)
 
     useEffect(() => {
-        setShowSearch(true)
+        if (search !== '') {
+            setShowSearch(true)
+        }
     }, [search])
 
     return (
@@ -240,6 +243,7 @@ const Booking = () => {
                     ))}
                 </ImageCardMediumCarousel>
             </IonGrid>
+            <Footer />
         </IonContent>
     )
 }

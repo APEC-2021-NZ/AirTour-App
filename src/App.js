@@ -29,6 +29,7 @@ import { TabBar } from './components'
 import Auth from './components/Auth'
 import GuideProivider from './components/shared/GuideContext'
 import { Booking, Empty, Explore, Profile, Wishlist, Guide } from './pages'
+import Chat from './pages/chats'
 /* Theme variables */
 import './theme/variables.css'
 
@@ -95,7 +96,7 @@ const App = () => (
                                     path="/bookings"
                                     component={Booking}
                                 />
-                                <Route exact path="/chats" component={Empty} />
+                                <Route exact path="/chats" component={Chat} />
                                 <Route
                                     exact
                                     path="/profile"

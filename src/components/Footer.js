@@ -1,10 +1,15 @@
 import React from 'react'
-import { IonGrid, IonCol } from '@ionic/react'
+import { IonGrid, IonCol, IonRow } from '@ionic/react'
 import styles from 'styled-components'
 
 const Footer = () => (
     <IonGrid
-        style={{ background: '#F5F5F5', overflow: 'scroll', minWidth: '100vh' }}
+        style={{
+            background: '#F5F5F5',
+            overflow: 'scroll',
+            minWidth: '100vh',
+            padding: 30,
+        }}
     >
         <IonCol style={{ minWidth: 230 }}>
             <ForTourists />

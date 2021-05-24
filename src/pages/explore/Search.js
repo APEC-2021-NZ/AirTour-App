@@ -72,7 +72,7 @@ const Search = ({ show, close, search, setSearch }) => {
                     }}
                 />
                 {city ? (
-                    <IonRow>
+                    <IonRow style={{ padding: 10 }}>
                         {tourGuides.map((value) => (
                             <TourGuideColumnCard key={value.id} value={value} />
                         ))}
