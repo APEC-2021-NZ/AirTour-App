@@ -85,7 +85,6 @@ const AuthModal = ({ open, onClose }) => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 letterSpacing: '-0.015em',
-                                color: '#000000',
                                 padding: '5px',
                             }}
                         >
@@ -106,7 +105,6 @@ const AuthModal = ({ open, onClose }) => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 letterSpacing: '0.04em',
-                                color: '#000000',
                                 padding: '5px',
                             }}
                         >

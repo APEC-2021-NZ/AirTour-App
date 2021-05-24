@@ -149,7 +149,6 @@ const Profile = () => {
                             display: 'flex',
                             alignItems: 'center',
                             letterSpacing: '-0.015em',
-                            color: '#000000',
                         }}
                     >
                         Your profile
