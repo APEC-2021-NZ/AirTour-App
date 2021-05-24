@@ -1,5 +1,5 @@
 import firebase from 'firebase/app'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AuthModal from './shared/AuthModal'
 
 const AuthContext = React.createContext()
@@ -16,18 +16,22 @@ const Auth = ({ children }) => {
         setOpen(false)
     }
 
-    firebase.auth().onAuthStateChanged((userDoc) => {
-        if (userDoc) {
-            setOpen(false)
-            setAuthenticated(true)
-            setUser(userDoc)
-        } else if (!localStorage.getItem('dismissAuth')) {
-            localStorage.removeItem('dismissAuth')
-            setOpen(true)
-            setAuthenticated(false)
-            setUser({})
-        }
-    })
+    useEffect(() => {
+        const unsubscribe = firebase.auth().onAuthStateChanged((userDoc) => {
+            if (userDoc) {
+                localStorage.removeItem('dismissAuth')
+                setOpen(false)
+                setAuthenticated(true)
+                setUser(userDoc)
+            } else if (!localStorage.getItem('dismissAuth')) {
+                localStorage.removeItem('dismissAuth')
+                setOpen(true)
+                setAuthenticated(false)
+                setUser({})
+            }
+        })
+        return () => unsubscribe()
+    }, [])
 
     const contextValue = {
         showModal: () => setOpen(true),

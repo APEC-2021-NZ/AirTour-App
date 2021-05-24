@@ -37,6 +37,7 @@ const AuthModal = ({ open, onClose }) => {
             setError(e.message)
             return
         } finally {
+            setPassword('')
             setLoading(false)
         }
     }
@@ -52,6 +53,7 @@ const AuthModal = ({ open, onClose }) => {
             setError(e.message)
             return
         } finally {
+            setPassword('')
             setLoading(false)
         }
     }
