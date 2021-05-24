@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     IonText,
     IonContent,
@@ -13,7 +13,6 @@ import {
     IonButton,
 } from '@ionic/react'
 import { searchOutline } from 'ionicons/icons'
-import styled from 'styled-components'
 import Carousel from 'react-multi-carousel'
 import {
     ImageCardSmallCarousel,
@@ -21,6 +20,7 @@ import {
     ImageCardSmall,
     ImageCardMedium,
 } from '../../components/ImageCard'
+import Search from './Search'
 
 const data = [
     {
@@ -52,8 +52,20 @@ const data = [
 
 const Booking = () => {
     const [search, setSearch] = useState('')
+    const [showSearch, setShowSearch] = useState(false)
+
+    useEffect(() => {
+        setShowSearch(true)
+    }, [search])
+
     return (
         <IonContent>
+            <Search
+                show={showSearch}
+                search={search}
+                setSearch={setSearch}
+                close={() => setShowSearch(false)}
+            />
             <IonGrid
                 style={{
                     maxWidth: '100%',
@@ -105,11 +117,16 @@ const Booking = () => {
                     <IonInput
                         value={search}
                         placeholder="Where are you going?"
-                        style={{ fontSize: 14, width: 100, marginRight: 30 }}
+                        style={{
+                            fontSize: 14,
+                            width: 100,
+                            marginRight: 30,
+                        }}
                         onIonChange={(e) => setSearch(e.target.value)}
                     />
                 </IonRow>
             </IonGrid>
+
             <IonGrid style={{ padding: '20px 20px 20px 20px' }}>
                 <IonText color="primary">
                     <h2 style={{ fontWeight: 'bold', fontSize: 24 }}>

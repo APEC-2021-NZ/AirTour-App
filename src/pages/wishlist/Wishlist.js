@@ -29,7 +29,7 @@ const Wishlist = () => {
             <IonGrid style={{ padding: '20' }}>
                 <IonRow>
                     {tourGuides.map((value) => (
-                        <TourGuideColumnCard value={value} />
+                        <TourGuideColumnCard key={value.id} value={value} />
                     ))}
                 </IonRow>
             </IonGrid>

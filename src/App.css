@@ -1,3 +1,7 @@
 .react-multi-carousel-list {
     overflow: visible !important;
 }
+
+.ion-page {
+    overflow: scroll;
+}

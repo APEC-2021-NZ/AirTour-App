@@ -27,7 +27,8 @@ import { Redirect, Route } from 'react-router-dom'
 import './App.css'
 import { TabBar } from './components'
 import Auth from './components/Auth'
-import { Booking, Empty, Explore, Profile, Wishlist } from './pages'
+import GuideProivider from './components/shared/GuideContext'
+import { Booking, Empty, Explore, Profile, Wishlist, Guide } from './pages'
 /* Theme variables */
 import './theme/variables.css'
 
@@ -73,26 +74,41 @@ const client = new ApolloClient({
 const App = () => (
     <IonApp>
         <ApolloProvider client={client}>
-            <IonReactRouter>
-                <Auth>
-                    <TabBar>
-                        <IonRouterOutlet>
-                            <Route exact path="/explore" component={Explore} />
-                            <Route
-                                exact
-                                path="/wishlist"
-                                component={Wishlist}
-                            />
-                            <Route exact path="/bookings" component={Booking} />
-                            <Route exact path="/chats" component={Empty} />
-                            <Route exact path="/profile" component={Profile} />
-                            <Route exact path="/">
-                                <Redirect to="/explore" />
-                            </Route>
-                        </IonRouterOutlet>
-                    </TabBar>
-                </Auth>
-            </IonReactRouter>
+            <GuideProivider>
+                <IonReactRouter>
+                    <Auth>
+                        <Guide />
+                        <TabBar>
+                            <IonRouterOutlet>
+                                <Route
+                                    exact
+                                    path="/explore"
+                                    component={Explore}
+                                />
+                                <Route
+                                    exact
+                                    path="/wishlist"
+                                    component={Wishlist}
+                                />
+                                <Route
+                                    exact
+                                    path="/bookings"
+                                    component={Booking}
+                                />
+                                <Route exact path="/chats" component={Empty} />
+                                <Route
+                                    exact
+                                    path="/profile"
+                                    component={Profile}
+                                />
+                                <Route exact path="/">
+                                    <Redirect to="/explore" />
+                                </Route>
+                            </IonRouterOutlet>
+                        </TabBar>
+                    </Auth>
+                </IonReactRouter>
+            </GuideProivider>
         </ApolloProvider>
     </IonApp>
 )
