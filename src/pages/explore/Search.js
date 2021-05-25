@@ -1,5 +1,6 @@
+import { useQuery } from '@apollo/client'
 import {
-    IonContent,
+    IonSpinner,
     IonGrid,
     IonIcon,
     IonModal,
@@ -8,9 +9,12 @@ import {
     IonInput,
 } from '@ionic/react'
 import { chevronBackOutline, locationOutline, pinOutline } from 'ionicons/icons'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import debounce from 'lodash.debounce'
 import styles from 'styled-components'
 import { TourGuideColumnCard } from '../../components'
+import { SearchDestinationsQuery } from '../../graphql/queries/destination'
+import { GuidesQuery } from '../../graphql/queries/guide'
 
 const CustomModel = styles(IonModal)`
     border-radius: 25px 25px 0px 0px;
@@ -19,10 +23,27 @@ const CustomModel = styles(IonModal)`
 
 const Search = ({ show, close, search, setSearch }) => {
     const [city, setCity] = useState(null)
+    const [searchQuery, setSearchQuery] = useState('')
+
+    const { loading, error, data } = useQuery(SearchDestinationsQuery, {
+        variables: { input: searchQuery },
+    })
+
+    const {
+        loading: guidesLoading,
+        error: guidesError,
+        data: guidesData,
+    } = useQuery(GuidesQuery, {
+        variables: { input: { placeID: city } },
+    })
 
     useEffect(() => {
         setCity(null)
     }, [search, show])
+
+    const debouncedSave = useRef(
+        debounce((nextValue) => setSearchQuery(nextValue), 1000),
+    ).current
 
     const closeSearch = () => {
         if (city) {
@@ -41,13 +62,6 @@ const Search = ({ show, close, search, setSearch }) => {
         numReviews: 21,
     })
 
-    const cities = [
-        { id: 'b0eda78c-e890-42c', name: 'Auckland, New Zealand' },
-        { id: 'b0eda78c-e890-43c', name: 'Wellington, New Zealand' },
-        { id: 'b0eda78c-e890-44c', name: 'Queenstown, New Zealand' },
-        { id: 'b0eda78c-e890-45c', name: 'Tokyo, Japan' },
-    ]
-
     return (
         <CustomModel isOpen={show} keyboardClose={false} onDidDismiss={close}>
             <IonGrid style={{ marginTop: 25, width: '100%' }}>
@@ -62,7 +76,10 @@ const Search = ({ show, close, search, setSearch }) => {
                         overflow: 'show',
                         textAlign: 'center',
                     }}
-                    onIonChange={(e) => setSearch(e.target.value)}
+                    onIonChange={(e) => {
+                        setSearch(e.target.value)
+                        debouncedSave(e.target.value)
+                    }}
                 />
                 <hr
                     style={{
@@ -100,31 +117,58 @@ const Search = ({ show, close, search, setSearch }) => {
                                 Explore nearby destinations
                             </p>
                         </IonRow>
-                        <IonCol>
-                            {cities.map((item, index) => (
-                                <IonCol onClick={() => setCity(item)}>
-                                    <p
-                                        key={item.name}
+                        <IonCol style={{ width: '100%' }}>
+                            {loading && (
+                                <div
+                                    style={{
+                                        display: 'block',
+                                        marginLeft: 'auto',
+                                        marginRight: 'auto',
+                                    }}
+                                >
+                                    <IonSpinner
                                         style={{
-                                            fontWeight: 300,
-                                            fontSize: 18,
-                                            textAlign: 'center',
+                                            position: 'fixed',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -50%)',
                                         }}
+                                        center
+                                        name="crescent"
+                                    />
+                                </div>
+                            )}
+                            {!loading &&
+                                !error &&
+                                data.searchDestinations.map((item, index) => (
+                                    <IonCol
+                                        key={item.id}
+                                        onClick={() => setCity(item.id)}
                                     >
-                                        {item.name}
-                                    </p>
-                                    {index !== cities.length - 1 ? (
-                                        <hr
-                                            key={item.name}
+                                        <p
                                             style={{
-                                                borderTop: '1px solid #C2C2C2',
-                                                marginRight: 40,
-                                                marginLeft: 40,
+                                                marginTop: 0,
+                                                fontWeight: 300,
+                                                fontSize: 18,
+                                                textAlign: 'center',
+                                                cursor: 'pointer',
                                             }}
-                                        />
-                                    ) : null}
-                                </IonCol>
-                            ))}
+                                        >
+                                            {item.name}
+                                        </p>
+                                        {index !==
+                                        data.searchDestinations.length - 1 ? (
+                                            <hr
+                                                style={{
+                                                    borderTop:
+                                                        '1px solid #C2C2C2',
+                                                    marginRight: 40,
+                                                    marginLeft: 40,
+                                                }}
+                                            />
+                                        ) : null}
+                                    </IonCol>
+                                ))}
                         </IonCol>
                     </IonCol>
                 )}

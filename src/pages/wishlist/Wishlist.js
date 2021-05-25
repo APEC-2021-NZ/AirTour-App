@@ -1,18 +1,62 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     IonContent,
     IonGrid,
     IonRow,
-    IonHeader,
-    IonTitle,
-    IonToolbar,
+    IonText,
+    IonButton,
     IonLoading,
 } from '@ionic/react'
 import { useQuery } from '@apollo/client/react'
+import styles from 'styled-components'
 import { TourGuideColumnCard } from '../../components'
 import { GuidesQuery } from '../../graphql/queries/guide'
+import { AuthContext } from '../../components/AuthProvider'
+
+const buttonStyle = {
+    '--color': '#009EA8',
+    '--color-activated': '#009EA8',
+    '--border-color': '#009EA8',
+    '--border-radius': '5px',
+    '--border-width': '2px',
+    '--background-activated': 'white',
+    width: 100,
+}
+
+const Line = styles.hr`
+    border-top: 1px solid #C2C2C2;
+    margin-right: 0px;
+    margin-left: 0px;
+`
+
+const Unauthenticated = ({ showModal }) => (
+    <>
+        <IonText>
+            <p
+                style={{
+                    fontFamily: 'Roboto',
+                    fontStyle: 'normal',
+                    fontWeight: '200',
+                    fontSize: '14px',
+                    lineHeight: '16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    letterSpacing: '0.04em',
+                    marginTop: 20,
+                    marginBottom: 32,
+                }}
+            >
+                Collect places to go and things to do by tapping the heart icon.
+            </p>
+        </IonText>
+        <IonButton onClick={showModal} fill="outline" style={buttonStyle}>
+            Log in
+        </IonButton>
+    </>
+)
 
 const Wishlist = () => {
+    const { showModal, isAuthenticated, logout, user } = useContext(AuthContext)
     const { loading, data } = useQuery(GuidesQuery, {
         variables: {
             input: {
@@ -37,17 +81,36 @@ const Wishlist = () => {
 
     return (
         <IonContent>
-            <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Wishlist</IonTitle>
-                </IonToolbar>
-            </IonHeader>
-            <IonGrid style={{ padding: 10 }}>
-                <IonRow>
-                    {tourGuides.map((value) => (
-                        <TourGuideColumnCard key={value.id} value={value} />
-                    ))}
-                </IonRow>
+            <IonGrid
+                style={{
+                    margin: '49px 16px 0px 16px',
+                }}
+            >
+                <IonText>
+                    <h2
+                        style={{
+                            fontFamily: 'Comfortaa',
+                            fontStyle: 'normal',
+                            fontWeight: 'normal',
+                            fontSize: '36px',
+                            lineHeight: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            letterSpacing: '-0.015em',
+                        }}
+                    >
+                        Wishlists
+                    </h2>
+                </IonText>
+                <Line />
+                {isAuthenticated && (
+                    <IonRow>
+                        {tourGuides.map((value) => (
+                            <TourGuideColumnCard key={value.id} value={value} />
+                        ))}
+                    </IonRow>
+                )}
+                {!isAuthenticated && <Unauthenticated showModal={showModal} />}
             </IonGrid>
         </IonContent>
     )

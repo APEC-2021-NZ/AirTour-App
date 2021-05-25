@@ -12,7 +12,17 @@ const Loading = ({ loading, error, component }) => {
     }, [component])
 
     if (loading) {
-        return <IonSpinner style={{ margin: 'auto' }} name="crescent" />
+        return (
+            <IonSpinner
+                style={{
+                    position: 'relative',
+                    top: 30,
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                }}
+                name="crescent"
+            />
+        )
     }
 
     if (component == null) {
