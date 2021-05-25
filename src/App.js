@@ -48,7 +48,7 @@ if (firebase.apps.length === 0) {
 }
 
 const httpLink = createHttpLink({
-    uri: '/graphql',
+    uri: process.env.REACT_APP_GRAPHQL,
 })
 
 const authLink = setContext(async (_, { headers }) => {
