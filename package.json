@@ -37,6 +37,7 @@
         "cordova-support-android-plugin": "^1.0.2",
         "firebase": "^8.6.2",
         "ionicons": "^5.4.0",
+        "match-sorter": "^6.3.0",
         "moment": "^2.29.1",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",

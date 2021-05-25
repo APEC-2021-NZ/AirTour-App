@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
     IonText,
     IonContent,
@@ -22,6 +22,7 @@ import {
 } from '../../components/ImageCard'
 import Search from './Search'
 import Footer from '../../components/Footer'
+import { GuideContext } from '../../components/shared/GuideContext'
 
 const data = [
     {
@@ -52,6 +53,7 @@ const data = [
 ]
 
 const Booking = () => {
+    const { setShowCreateGuide } = useContext(GuideContext)
     const [search, setSearch] = useState('')
     const [showSearch, setShowSearch] = useState(false)
 
@@ -209,6 +211,7 @@ const Booking = () => {
                                     fontSize: 18,
                                     fontWeight: 'bold',
                                 }}
+                                onClick={() => setShowCreateGuide(true)}
                             >
                                 Learn more
                             </IonButton>

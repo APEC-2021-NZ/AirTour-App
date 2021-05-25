@@ -27,6 +27,7 @@ import { Redirect, Route } from 'react-router-dom'
 import './App.css'
 import { TabBar } from './components'
 import AuthProvider from './components/AuthProvider'
+import CreateGuideModal from './components/shared/CreateGuideModal'
 import GuideProivider from './components/shared/GuideContext'
 import { Booking, Empty, Explore, Profile, Wishlist, Guide } from './pages'
 import Chat from './pages/chats'
@@ -79,6 +80,7 @@ const App = () => (
                 <AuthProvider>
                     <IonReactRouter>
                         <Guide />
+                        <CreateGuideModal />
                         <TabBar>
                             <IonRouterOutlet>
                                 <Route

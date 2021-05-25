@@ -5,6 +5,7 @@ export const GuideContext = createContext()
 const GuideProivider = ({ children }) => {
     const [guideID, setGuideID] = useState({})
     const [showGuide, setShowGuide] = useState(false)
+    const [showCreateGuide, setShowCreateGuide] = useState(false)
 
     return (
         <GuideContext.Provider
@@ -13,6 +14,8 @@ const GuideProivider = ({ children }) => {
                 setShowGuide,
                 guideID,
                 setGuideID,
+                showCreateGuide,
+                setShowCreateGuide,
             }}
         >
             {children}
