@@ -4,7 +4,12 @@ import GuideFragment from './guide'
 import { CityFragment, CountryFragment } from './location'
 import ReviewFragment from './review'
 import UserFragment from './user'
-import { TagFragment, ExperienceFragement, DestinationFragment } from './helper'
+import {
+    TagFragment,
+    ExperienceFragement,
+    DestinationFragment,
+    LanguageFragment,
+} from './helper'
 
 export {
     BookingFragment,
@@ -18,4 +23,5 @@ export {
     TagFragment,
     ExperienceFragement,
     DestinationFragment,
+    LanguageFragment,
 }
