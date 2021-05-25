@@ -5,6 +5,7 @@ import {
     IonRow,
     IonCol,
     IonButton,
+    IonLoading,
 } from '@ionic/react'
 import {
     arrowBack,
@@ -17,9 +18,11 @@ import {
 import React, { useContext } from 'react'
 import styles from 'styled-components'
 import ShowMoreText from 'react-show-more-text'
+import { useQuery } from '@apollo/client/react'
 import { GuideContext } from '../../components/shared/GuideContext'
 import { TourGuideColumnCard } from '../../components'
 import { AuthContext } from '../../components/AuthProvider'
+import { GuideQuery } from '../../graphql/queries/guide'
 
 const CustomModel = styles(IonModal)`
     border-radius: 25px 25px 0px 0px;
@@ -94,7 +97,23 @@ const GuideDescription = ({ description }) => (
 
 const Guide = ({ id, wishlist, share }) => {
     const { showModal, isAuthenticated } = useContext(AuthContext)
-    const { showGuide, setShowGuide } = useContext(GuideContext)
+    const { showGuide, setShowGuide, guideID } = useContext(GuideContext)
+
+    const { data, loading } = useQuery(GuideQuery, {
+        variables: {
+            id: guideID,
+        },
+    })
+
+    if (loading || guideID === '') {
+        return <IonLoading open={loading} />
+    }
+
+    if (data === undefined) {
+        return <></>
+    }
+    const { guide } = data
+
     const tourGuide = {
         id: 'b0eda78c-e890-42c6-acff-ea8aa323f1a5',
         image: 'https://picsum.photos/id/1025/300/300',
@@ -125,8 +144,8 @@ const Guide = ({ id, wishlist, share }) => {
                     height: 236,
                     objectFit: 'cover',
                 }}
-                alt={tourGuide.description}
-                src={tourGuide.image}
+                alt={guide.description}
+                src={guide.image.uri}
             />
             <IonGrid style={{ maxWidth: 700, padding: '0px 20px 0px 20px' }}>
                 <p
@@ -137,41 +156,38 @@ const Guide = ({ id, wishlist, share }) => {
                         marginBottom: 0,
                     }}
                 >
-                    {tourGuide.description}
+                    {guide.description}
                 </p>
                 <p
                     style={{ marginTop: 8, fontSize: 13 }}
-                >{`★ ${tourGuide.rating} (${tourGuide.numReviews}) - ${tourGuide.city}`}</p>
+                >{`★ ${guide.rating.toFixed(2)} (${guide.numReviews}) - ${
+                    guide.city.name
+                }, ${guide.city.country.name}`}</p>
                 <Line />
                 <GuideDetail
                     icon={locationOutline}
                     name="Destinations"
-                    description="Auckland City, Auckland War Memorial Museum, Tahuna Torea reserve."
+                    description={`${guide.destinations
+                        .map((destination) => destination.name)
+                        .join(', ')}`}
                 />
                 <GuideDetail
                     icon={languageOutline}
                     name="Language"
-                    description="English, Japanaese"
+                    description={`${guide.languages
+                        .map((language) => language.name)
+                        .join(', ')}`}
                 />
                 <GuideDetail
                     icon={balloonOutline}
                     name="Activites"
-                    description="Sight seeing, hiking, tramping, gaming, programming, lazy life style."
+                    description={`${guide.experiences
+                        .map((experience) => experience.name)
+                        .join(', ')}`}
                 />
 
                 <Line />
-                <GuideDescription
-                    description="Lorem ipsum dolor sit amet, consectetur ed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-                minim veniam, quis nostrud exercitation ullamco laboris nisi
-                ut aliquip ex Lorem ipsum dolor sit amet, consectetur
-                adipiscing elit, sed do eiusmod tempor incididunt ut labore
- 
-                et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
-                />
+                <GuideDescription description={guide.description} />
                 <Line />
                 <p
                     style={{

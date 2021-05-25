@@ -29,8 +29,8 @@ const TourGuideColumnCard = ({ value: guide }) => {
             <IonCard
                 style={{ cursor: 'pointer', borderRadius: 15, margin: 5 }}
                 onClick={() => {
+                    setGuideID(guide.id)
                     setShowGuide(true)
-                    setGuideID(guide.ID)
                 }}
             >
                 <img

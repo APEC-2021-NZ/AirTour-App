@@ -3,7 +3,7 @@ import React, { createContext, useState } from 'react'
 export const GuideContext = createContext()
 
 const GuideProivider = ({ children }) => {
-    const [guideID, setGuideID] = useState({})
+    const [guideID, setGuideID] = useState('')
     const [showGuide, setShowGuide] = useState(false)
     const [showCreateGuide, setShowCreateGuide] = useState(false)
 

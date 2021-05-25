@@ -7,6 +7,8 @@ import {
     CityFragment,
     GuideFragment,
     ImageFragment,
+    CountryFragment,
+    ReviewFragment,
 } from '../fragments'
 
 const GuidesQuery = gql`
@@ -28,11 +30,43 @@ const GuidesQuery = gql`
 
 const GuideQuery = gql`
     query GuideQuery($id: ID!) {
-        guide(id: $id) {
+        guide(guideID: $id) {
             ...GuideFragment
+            image {
+                ...ImageFragment
+            }
+            city {
+                ...CityFragment
+                country {
+                    ...CountryFragment
+                }
+            }
+            reviews {
+                ...ReviewFragment
+            }
+            languages {
+                ...LanguageFragment
+            }
+            experiences {
+                ...ExperienceFragement
+            }
+            destinations {
+                ...DestinationFragment
+            }
+            tags {
+                ...TagFragment
+            }
         }
     }
     ${GuideFragment}
+    ${ImageFragment}
+    ${CityFragment}
+    ${CountryFragment}
+    ${ReviewFragment}
+    ${LanguageFragment}
+    ${ExperienceFragement}
+    ${DestinationFragment}
+    ${TagFragment}
 `
 
 const GuideCreateQuery = gql`
