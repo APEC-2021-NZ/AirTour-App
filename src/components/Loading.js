@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { IonSpinner, IonIcon } from '@ionic/react'
 import { alertCircleOutline } from 'ionicons/icons'
 
 const Loading = ({ loading, error, component }) => {
+    const [carouselChildren, setCarouselChildren] = useState(<></>)
+
+    useEffect(() => {
+        setTimeout(() => {
+            setCarouselChildren(component)
+        }, 0)
+    }, [component])
+
     if (loading) {
         return <IonSpinner style={{ margin: 'auto' }} name="crescent" />
     }
@@ -16,7 +24,7 @@ const Loading = ({ loading, error, component }) => {
         )
     }
 
-    return component
+    return carouselChildren
 }
 
 export default Loading
