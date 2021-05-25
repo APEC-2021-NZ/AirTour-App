@@ -19,10 +19,12 @@ import React, { useContext } from 'react'
 import styles from 'styled-components'
 import ShowMoreText from 'react-show-more-text'
 import { useQuery } from '@apollo/client/react'
+import { SocialSharing } from '@ionic-native/social-sharing'
+
 import { GuideContext } from '../../components/shared/GuideContext'
 import { TourGuideColumnCard } from '../../components'
 import { AuthContext } from '../../components/AuthProvider'
-import { GuideQuery } from '../../graphql/queries/guide'
+import { GuideQuery, GuidesQuery } from '../../graphql/queries/guide'
 
 const CustomModel = styles(IonModal)`
     border-radius: 25px 25px 0px 0px;
@@ -95,42 +97,26 @@ const GuideDescription = ({ description }) => (
     </IonGrid>
 )
 
-const Guide = ({ id, wishlist, share }) => {
+const Guide = () => {
     const { showModal, isAuthenticated } = useContext(AuthContext)
     const { showGuide, setShowGuide, guideID } = useContext(GuideContext)
 
-    const { data, loading } = useQuery(GuideQuery, {
+    const { data: guideData, loading: loadingGuide } = useQuery(GuideQuery, {
         variables: {
             id: guideID,
         },
     })
 
-    if (loading || guideID === '') {
-        return <IonLoading open={loading} />
+    if (loadingGuide || guideID === '') {
+        return <IonLoading open={loadingGuide} />
     }
 
-    if (data === undefined) {
+    if (!guideData) {
         return <></>
     }
-    const { guide } = data
 
-    const tourGuide = {
-        id: 'b0eda78c-e890-42c6-acff-ea8aa323f1a5',
-        image: 'https://picsum.photos/id/1025/300/300',
-        city: 'Auckland City, New Zealand',
-        description: 'Love hiking and tramping in nature',
-        rating: 4.97,
-        numReviews: 21,
-    }
+    const { guide } = guideData
 
-    const tourGuides = new Array(2).fill({
-        id: 'b0eda78c-e890-42c6-acff-ea8aa323f1a5',
-        image: 'https://picsum.photos/id/1025/300/300',
-        city: 'Auckland',
-        description: 'Love hiking and tramping in nature',
-        rating: 4.97,
-        numReviews: 21,
-    })
     return (
         <CustomModel
             isOpen={showGuide}
@@ -144,10 +130,10 @@ const Guide = ({ id, wishlist, share }) => {
                     height: 236,
                     objectFit: 'cover',
                 }}
-                alt={guide.description}
+                alt={guide.name}
                 src={guide.image.uri}
             />
-            <IonGrid style={{ maxWidth: 700, padding: '0px 20px 0px 20px' }}>
+            <IonGrid style={{ width: '100%', padding: '0px 20px 0px 20px' }}>
                 <p
                     style={{
                         fontWeight: 'bold',
@@ -156,7 +142,7 @@ const Guide = ({ id, wishlist, share }) => {
                         marginBottom: 0,
                     }}
                 >
-                    {guide.description}
+                    {guide.blurb}
                 </p>
                 <p
                     style={{ marginTop: 8, fontSize: 13 }}
@@ -196,11 +182,13 @@ const Guide = ({ id, wishlist, share }) => {
                 >
                     More guides
                 </p>
-                <IonRow style={{ margin: -10, marginBottom: 20 }}>
-                    {tourGuides.map((value) => (
-                        <TourGuideColumnCard key={value.id} value={value} />
-                    ))}
-                </IonRow>
+                {!loadingGuide && (
+                    <IonRow style={{ margin: -10, marginBottom: 20 }}>
+                        {guide.recommendations?.map((value) => (
+                            <TourGuideColumnCard key={value.id} value={value} />
+                        ))}
+                    </IonRow>
+                )}
             </IonGrid>
             <CustomIcon
                 onClick={() => setShowGuide(false)}
@@ -208,22 +196,31 @@ const Guide = ({ id, wishlist, share }) => {
                 style={{
                     top: 30,
                     left: 20,
+                    cursor: 'pointer',
                 }}
             />
             <CustomIcon
-                onClick={shareOutline}
+                onClick={() => {
+                    SocialSharing.shareViaFacebook(
+                        `${guide.blurb} - ${guide.name}`,
+                        guide.description,
+                        '',
+                    )
+                }}
                 icon={shareOutline}
                 style={{
                     top: 30,
                     right: 80,
+                    cursor: 'pointer',
                 }}
             />
             <CustomIcon
-                onClick={wishlist}
+                onClick={() => alert('test')}
                 icon={heartOutline}
                 style={{
                     top: 30,
                     right: 20,
+                    cursor: 'pointer',
                 }}
             />
             <IonGrid
@@ -248,9 +245,9 @@ const Guide = ({ id, wishlist, share }) => {
                         >
                             From $10 NZD / hour
                         </p>
-                        <p
-                            style={{ margin: 3 }}
-                        >{`★ ${tourGuide.rating} (${tourGuide.numReviews})`}</p>
+                        <p style={{ margin: 3 }}>{`★ ${guide.rating.toFixed(
+                            2,
+                        )} (${guide.numReviews})`}</p>
                     </IonCol>
                     <IonCol>
                         <IonButton

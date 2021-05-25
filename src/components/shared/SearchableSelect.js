@@ -129,7 +129,10 @@ const SearchableSelect = ({
                     />
 
                     {matches.map((item, index) => (
-                        <IonCol onClick={() => handleSelect(item)}>
+                        <IonCol
+                            key={item.id}
+                            onClick={() => handleSelect(item)}
+                        >
                             <IonRow
                                 style={{
                                     justifyContent: 'center',

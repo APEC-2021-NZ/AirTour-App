@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { IonCard, IonCardContent, IonCol, IonIcon } from '@ionic/react'
 import { heartOutline, heart } from 'ionicons/icons'
 import styles from 'styled-components'
 import { GuideContext } from './GuideContext'
+import noImage from '../../images/no-image.jpg'
 
 const CustomIcon = styles(IonIcon)`
     position: absolute;
@@ -17,6 +18,11 @@ const CustomIcon = styles(IonIcon)`
 
 const TourGuideColumnCard = ({ value: guide }) => {
     const { setShowGuide, setGuideID } = useContext(GuideContext)
+    const [image, setImage] = useState(guide.image.uri)
+
+    const onError = () => {
+        setImage(noImage)
+    }
     return (
         <IonCol
             style={{ padding: 0 }}
@@ -34,12 +40,15 @@ const TourGuideColumnCard = ({ value: guide }) => {
                 }}
             >
                 <img
-                    src={guide.image}
+                    onError={onError}
+                    src={image}
                     style={{ objectFit: 'cover' }}
                     alt="Tour Guide Portrait"
                 />
                 <IonCardContent style={{ fontSize: 12, color: '#000000' }}>
-                    {`★ ${guide.rating} (${guide.numReviews}) - ${guide.city}`}
+                    {`★ ${guide.rating.toFixed(2)} (${guide.numReviews}) - ${
+                        guide.city?.name
+                    }, ${guide.city?.country?.name}`}
                     <br />
                     <br />
                     {guide.description}

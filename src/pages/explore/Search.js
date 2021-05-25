@@ -21,6 +21,27 @@ const CustomModel = styles(IonModal)`
     height: 100%;
 `
 
+const Spinner = () => (
+    <div
+        style={{
+            display: 'block',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        }}
+    >
+        <IonSpinner
+            style={{
+                position: 'fixed',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+            }}
+            center
+            name="crescent"
+        />
+    </div>
+)
+
 const Search = ({ show, close, search, setSearch }) => {
     const [city, setCity] = useState(null)
     const [searchQuery, setSearchQuery] = useState('')
@@ -29,11 +50,7 @@ const Search = ({ show, close, search, setSearch }) => {
         variables: { input: searchQuery },
     })
 
-    const {
-        loading: guidesLoading,
-        error: guidesError,
-        data: guidesData,
-    } = useQuery(GuidesQuery, {
+    const { data: guidesData } = useQuery(GuidesQuery, {
         variables: { input: { placeID: city } },
     })
 
@@ -52,15 +69,6 @@ const Search = ({ show, close, search, setSearch }) => {
             close()
         }
     }
-
-    const tourGuides = new Array(20).fill({
-        id: 'b0eda78c-e890-42c6-acff-ea8aa323f1a5',
-        image: 'https://picsum.photos/id/1025/300/300',
-        city: 'Auckland',
-        description: 'Love hiking and tramping in nature',
-        rating: 4.97,
-        numReviews: 21,
-    })
 
     return (
         <CustomModel isOpen={show} keyboardClose={false} onDidDismiss={close}>
@@ -89,11 +97,19 @@ const Search = ({ show, close, search, setSearch }) => {
                     }}
                 />
                 {city ? (
-                    <IonRow style={{ padding: 10 }}>
-                        {tourGuides.map((value) => (
-                            <TourGuideColumnCard key={value.id} value={value} />
-                        ))}
-                    </IonRow>
+                    <>
+                        {loading && <Spinner />}
+                        {!loading && !error && (
+                            <IonRow style={{ padding: 10 }}>
+                                {guidesData?.guides.map((value) => (
+                                    <TourGuideColumnCard
+                                        key={value.id}
+                                        value={value}
+                                    />
+                                ))}
+                            </IonRow>
+                        )}
+                    </>
                 ) : (
                     <IonCol>
                         <IonRow>
@@ -118,26 +134,7 @@ const Search = ({ show, close, search, setSearch }) => {
                             </p>
                         </IonRow>
                         <IonCol style={{ width: '100%' }}>
-                            {loading && (
-                                <div
-                                    style={{
-                                        display: 'block',
-                                        marginLeft: 'auto',
-                                        marginRight: 'auto',
-                                    }}
-                                >
-                                    <IonSpinner
-                                        style={{
-                                            position: 'fixed',
-                                            top: '50%',
-                                            left: '50%',
-                                            transform: 'translate(-50%, -50%)',
-                                        }}
-                                        center
-                                        name="crescent"
-                                    />
-                                </div>
-                            )}
+                            {loading && <Spinner />}
                             {!loading &&
                                 !error &&
                                 data.searchDestinations.map((item, index) => (

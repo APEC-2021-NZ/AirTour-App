@@ -56,6 +56,18 @@ const GuideQuery = gql`
             tags {
                 ...TagFragment
             }
+            recommendations {
+                ...GuideFragment
+                image {
+                    ...ImageFragment
+                }
+                city {
+                    ...CityFragment
+                    country {
+                        ...CountryFragment
+                    }
+                }
+            }
         }
     }
     ${GuideFragment}
