@@ -22,6 +22,7 @@ import Search from './Search'
 import Footer from '../../components/Footer'
 import TourGuide from '../../images/tour-guide.jpg'
 import { ExploreQuery } from '../../graphql/queries/explore'
+import { GuideContext } from '../../components/shared/GuideContext'
 
 const Booking = () => {
     const { setShowCreateGuide } = useContext(GuideContext)
