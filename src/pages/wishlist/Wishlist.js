@@ -6,18 +6,34 @@ import {
     IonHeader,
     IonTitle,
     IonToolbar,
+    IonLoading,
 } from '@ionic/react'
+import { useQuery } from '@apollo/client/react'
 import { TourGuideColumnCard } from '../../components'
+import { GuidesQuery } from '../../graphql/queries/guide'
 
 const Wishlist = () => {
-    const tourGuides = new Array(20).fill({
-        id: 'b0eda78c-e890-42c6-acff-ea8aa323f1a5',
-        image: 'https://picsum.photos/id/1025/300/300',
-        city: 'Auckland',
-        description: 'Love hiking and tramping in nature',
-        rating: 4.97,
-        numReviews: 21,
+    const { loading, data } = useQuery(GuidesQuery, {
+        variables: {
+            input: {
+                onWishlist: true,
+            },
+        },
     })
+
+    if (loading) {
+        return <IonLoading open={loading} />
+    }
+
+    const tourGuides = (data?.guides || []).map((c) => ({
+        id: c.id,
+        image: c.image.uri,
+        city: `${c.city.name}, ${c.city.country.name}`,
+        description: c.description,
+        rating: c.rating.toFixed(2),
+        numReviews: c.numReviews,
+        liked: true,
+    }))
 
     return (
         <IonContent>
