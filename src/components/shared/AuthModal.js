@@ -1,3 +1,4 @@
+import { useMutation } from '@apollo/client'
 import {
     IonButton,
     IonDatetime,
@@ -14,6 +15,7 @@ import { closeOutline } from 'ionicons/icons'
 import moment from 'moment'
 import React, { useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
+import { CreateUser } from '../../graphql/mutations/users'
 
 const buttonStyle = {
     '--color': '#009EA8',
@@ -281,6 +283,7 @@ const RegisterModal = ({ email, password, onClose, onRegister, open }) => {
 }
 
 const AuthModal = ({ open, onClose }) => {
+    const [createUser, { data, error: mutationError }] = useMutation(CreateUser)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState(null)
@@ -306,12 +309,33 @@ const AuthModal = ({ open, onClose }) => {
         setLoading(true)
 
         try {
-            // call createUser mutation and check if an error is returned
+            await createUser({
+                variables: {
+                    input: {
+                        email,
+                        password,
+                        firstname,
+                        surname,
+                        dob,
+                    },
+                },
+            })
+            await firebase.auth().signInWithEmailAndPassword(email, password)
             setError('')
         } catch (e) {
-            // setRegister(false)
-            setError(e.message)
-            return
+            if (e.graphQLErrors) {
+                // There is almost certainly a better way to do this
+                switch (e.graphQLErrors[0].extensions.code) {
+                    case 'EMAIL_TAKEN_ERROR':
+                    case 'INVALID_EMAIL_ERROR':
+                    case 'INSECURE_PASSWORD_ERROR':
+                        setRegister(false)
+                        setError(e.message)
+                        return
+                }
+                throw e
+            }
+            console.error(e)
         } finally {
             setLoading(false)
         }

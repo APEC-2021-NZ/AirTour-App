@@ -3,7 +3,7 @@ import UserFragment from '../fragments/user'
 
 const CreateUser = gql`
     mutation CreateUser($input: CreateUserInput!) {
-        createUser {
+        createUser(input: $input) {
             ...UserFragment
         }
     }

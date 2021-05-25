@@ -6,5 +6,8 @@ export default gql`
         firstname
         surname
         dob
+        image {
+            uri
+        }
     }
 `
