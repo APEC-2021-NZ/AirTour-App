@@ -8,11 +8,11 @@ const CityFragment = gql`
     }
 `
 
-const CountryFragement = gql`
-    fragment CountryFragement on Country {
+const CountryFragment = gql`
+    fragment CountryFragment on Country {
         id
         name
     }
 `
 
-export { CityFragment, CountryFragement }
+export { CityFragment, CountryFragment }

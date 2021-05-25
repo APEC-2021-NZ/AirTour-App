@@ -9,8 +9,6 @@ import {
 import {
     arrowBack,
     balloonOutline,
-    basketOutline,
-    chevronBackOutline,
     heartOutline,
     languageOutline,
     locationOutline,

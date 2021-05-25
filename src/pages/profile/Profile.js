@@ -30,7 +30,6 @@ const buttonStyle = {
 const textStyle = {
     left: -1,
     top: 16,
-
     fontFamily: 'Roboto',
     fontStyle: 'normal',
     fontWeight: 200,
@@ -38,7 +37,6 @@ const textStyle = {
     display: 'flex',
     alignItems: 'center',
     letterSpacing: '0.04em',
-
     color: '#000000',
 }
 

@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { IonCol, IonGrid, IonRow } from '@ionic/react'
 import Carousel from 'react-multi-carousel'
+import 'react-multi-carousel/lib/styles.css'
+import noImage from '../images/no-image.jpg'
 
 const ImageCardSmallCarousel = ({ children }) => {
     const responsive = {
@@ -73,38 +75,56 @@ const ImageCardMediumCarousel = ({ children }) => {
     )
 }
 
-const ImageCardMedium = ({ name, uri, onSelect }) => (
-    <IonCol onClick={onSelect} style={{ padding: 0 }}>
-        <img
-            alt={name}
-            src={uri}
-            style={{
-                height: 200,
-                width: 200,
-                borderRadius: '15px',
-            }}
-        />
-        <p style={{ fontWeight: 'bold', fontSize: 13 }}>{name}</p>
-    </IonCol>
-)
+const ImageCardMedium = ({ name, uri, onSelect }) => {
+    const [image, setImage] = useState(uri)
 
-const ImageCardSmall = ({ name, description, uri, onSelect }) => (
-    <IonRow onClick={onSelect}>
-        <img
-            alt={name}
-            src={uri}
-            style={{
-                height: 90,
-                width: 90,
-                borderRadius: '15px',
-            }}
-        />
-        <IonGrid>
+    const onError = () => {
+        setImage(noImage)
+    }
+
+    return (
+        <IonCol onClick={onSelect} style={{ padding: 0 }}>
+            <img
+                onError={onError}
+                alt={name}
+                src={image}
+                style={{
+                    height: 200,
+                    width: 200,
+                    borderRadius: '15px',
+                }}
+            />
             <p style={{ fontWeight: 'bold', fontSize: 13 }}>{name}</p>
-            <p style={{ fontSize: 11 }}>{description}</p>
-        </IonGrid>
-    </IonRow>
-)
+        </IonCol>
+    )
+}
+
+const ImageCardSmall = ({ name, description, uri, onSelect }) => {
+    const [image, setImage] = useState(uri)
+
+    const onError = () => {
+        setImage(noImage)
+    }
+
+    return (
+        <IonRow onClick={onSelect}>
+            <img
+                onError={onError}
+                alt={name}
+                src={image}
+                style={{
+                    height: 90,
+                    width: 90,
+                    borderRadius: '15px',
+                }}
+            />
+            <IonGrid>
+                <p style={{ fontWeight: 'bold', fontSize: 13 }}>{name}</p>
+                <p style={{ fontSize: 11 }}>{description}</p>
+            </IonGrid>
+        </IonRow>
+    )
+}
 
 export {
     ImageCardSmallCarousel,

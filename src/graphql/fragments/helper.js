@@ -1,5 +1,11 @@
 import { gql } from '@apollo/client'
 
+const ImageFragment = gql`
+    fragment ImageFragment on Image {
+        uri
+    }
+`
+
 const LanguageFragment = gql`
     fragment LanguageFragment on Language {
         id
@@ -11,30 +17,33 @@ const ExperienceFragement = gql`
     fragment ExperienceFragement on Experience {
         id
         name
-        image
+        image {
+            ...ImageFragment
+        }
     }
+    ${ImageFragment}
 `
 
 const DestinationFragment = gql`
     fragment DestinationFragment on Destination {
         id
         name
-        image
+        image {
+            ...ImageFragment
+        }
     }
+    ${ImageFragment}
 `
 
 const TagFragment = gql`
     fragment TagFragment on Tag {
         id
         name
-        image
+        image {
+            ...ImageFragment
+        }
     }
-`
-
-const ImageFragment = gql`
-    fragment ImageFragment on Image {
-        uri
-    }
+    ${ImageFragment}
 `
 
 export {

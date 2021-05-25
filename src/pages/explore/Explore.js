@@ -7,13 +7,11 @@ import {
     IonRow,
     IonIcon,
     IonInput,
-    IonCard,
-    IonSlides,
-    IonSlide,
     IonButton,
 } from '@ionic/react'
 import { searchOutline } from 'ionicons/icons'
-import Carousel from 'react-multi-carousel'
+import { useQuery } from '@apollo/client'
+import Loading from '../../components/Loading'
 import {
     ImageCardSmallCarousel,
     ImageCardMediumCarousel,
@@ -22,40 +20,15 @@ import {
 } from '../../components/ImageCard'
 import Search from './Search'
 import Footer from '../../components/Footer'
-import { GuideContext } from '../../components/shared/GuideContext'
-
-const data = [
-    {
-        uri: 'https://picsum.photos/400',
-        name: 'Auckland City',
-        description: '25 Guides',
-    },
-    {
-        uri: 'https://picsum.photos/400',
-        name: 'MOTAT',
-        description: '10 Guides',
-    },
-    {
-        uri: 'https://picsum.photos/400',
-        name: "Neville's House",
-        description: '103 Guides',
-    },
-    {
-        uri: 'https://picsum.photos/400',
-        name: 'Auckland City',
-        description: '25 Guides',
-    },
-    {
-        uri: 'https://picsum.photos/400',
-        name: 'MOTAT',
-        description: '10 Guides',
-    },
-]
+import TourGuide from '../../images/tour-guide.jpg'
+import { ExploreQuery } from '../../graphql/queries/explore'
 
 const Booking = () => {
     const { setShowCreateGuide } = useContext(GuideContext)
     const [search, setSearch] = useState('')
     const [showSearch, setShowSearch] = useState(false)
+
+    const { loading, data } = useQuery(ExploreQuery)
 
     useEffect(() => {
         if (search !== '') {
@@ -138,16 +111,24 @@ const Booking = () => {
                         Explore nearby
                     </h2>
                 </IonText>
-                <ImageCardSmallCarousel>
-                    {data.map((card) => (
-                        <ImageCardSmall
-                            uri={card.uri}
-                            key={card.name}
-                            name={card.name}
-                            description={card.description}
-                        />
-                    ))}
-                </ImageCardSmallCarousel>
+                <Loading
+                    loading={loading}
+                    component={
+                        data ? (
+                            <ImageCardSmallCarousel>
+                                {data?.tags.map((card) => (
+                                    <ImageCardSmall
+                                        uri={card.image.uri}
+                                        key={card.name}
+                                        name={card.name}
+                                        description={card.description}
+                                    />
+                                ))}
+                            </ImageCardSmallCarousel>
+                        ) : null
+                    }
+                />
+
                 <IonText color="primary">
                     <h2
                         style={{
@@ -159,15 +140,22 @@ const Booking = () => {
                         Go anywhere
                     </h2>
                 </IonText>
-                <ImageCardMediumCarousel>
-                    {data.map((card) => (
-                        <ImageCardMedium
-                            uri={card.uri}
-                            key={card.name}
-                            name={card.name}
-                        />
-                    ))}
-                </ImageCardMediumCarousel>
+                <Loading
+                    loading={loading}
+                    component={
+                        data ? (
+                            <ImageCardMediumCarousel>
+                                {data?.destinations.map((card) => (
+                                    <ImageCardMedium
+                                        uri={card.image.uri}
+                                        key={card.name}
+                                        name={card.name}
+                                    />
+                                ))}
+                            </ImageCardMediumCarousel>
+                        ) : null
+                    }
+                />
                 <IonGrid
                     style={{
                         backgroundColor: '#171717',
@@ -218,7 +206,7 @@ const Booking = () => {
                         </IonRow>
                         <img
                             alt="learn more"
-                            src="https://picsum.photos/400"
+                            src={TourGuide}
                             width="100%"
                             height="150"
                             style={{ objectFit: 'cover', marginTop: 33 }}
@@ -236,15 +224,22 @@ const Booking = () => {
                         Discover Experiences
                     </h2>
                 </IonText>
-                <ImageCardMediumCarousel>
-                    {data.map((card) => (
-                        <ImageCardMedium
-                            uri={card.uri}
-                            key={card.name}
-                            name={card.name}
-                        />
-                    ))}
-                </ImageCardMediumCarousel>
+                <Loading
+                    loading={loading}
+                    component={
+                        data ? (
+                            <ImageCardMediumCarousel>
+                                {data?.experiences.map((card) => (
+                                    <ImageCardMedium
+                                        uri={card.image.uri}
+                                        key={card.name}
+                                        name={card.name}
+                                    />
+                                ))}
+                            </ImageCardMediumCarousel>
+                        ) : null
+                    }
+                />
             </IonGrid>
             <Footer />
         </IonContent>
