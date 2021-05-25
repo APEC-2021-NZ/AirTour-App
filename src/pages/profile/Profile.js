@@ -15,7 +15,7 @@ import {
     personOutline,
     settingsOutline,
 } from 'ionicons/icons'
-import { AuthContext } from '../../components/Auth'
+import { AuthContext } from '../../components/AuthProvider'
 
 const buttonStyle = {
     '--color': '#009EA8',
@@ -129,8 +129,8 @@ const Authenticated = ({ logout }) => (
 )
 
 const Profile = () => {
-    const { showModal, isAuthenticated, logout } = useContext(AuthContext)
-
+    const { showModal, isAuthenticated, logout, user } = useContext(AuthContext)
+    console.log(user)
     return (
         <IonContent>
             <IonGrid

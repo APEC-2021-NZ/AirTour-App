@@ -21,7 +21,7 @@ import styles from 'styled-components'
 import ShowMoreText from 'react-show-more-text'
 import { GuideContext } from '../../components/shared/GuideContext'
 import { TourGuideColumnCard } from '../../components'
-import { AuthContext } from '../../components/Auth'
+import { AuthContext } from '../../components/AuthProvider'
 
 const CustomModel = styles(IonModal)`
     border-radius: 25px 25px 0px 0px;

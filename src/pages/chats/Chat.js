@@ -1,7 +1,7 @@
 import { IonText, IonContent, IonGrid, IonButton } from '@ionic/react'
 import styles from 'styled-components'
 import React, { useContext } from 'react'
-import { AuthContext } from '../../components/Auth'
+import { AuthContext } from '../../components/AuthProvider'
 
 const buttonStyle = {
     '--color': '#009EA8',

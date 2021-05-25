@@ -26,7 +26,7 @@ import 'react-multi-carousel/lib/styles.css'
 import { Redirect, Route } from 'react-router-dom'
 import './App.css'
 import { TabBar } from './components'
-import Auth from './components/Auth'
+import AuthProvider from './components/AuthProvider'
 import GuideProivider from './components/shared/GuideContext'
 import { Booking, Empty, Explore, Profile, Wishlist, Guide } from './pages'
 import Chat from './pages/chats'
@@ -76,8 +76,8 @@ const App = () => (
     <IonApp>
         <ApolloProvider client={client}>
             <GuideProivider>
-                <IonReactRouter>
-                    <Auth>
+                <AuthProvider>
+                    <IonReactRouter>
                         <Guide />
                         <TabBar>
                             <IonRouterOutlet>
@@ -107,8 +107,8 @@ const App = () => (
                                 </Route>
                             </IonRouterOutlet>
                         </TabBar>
-                    </Auth>
-                </IonReactRouter>
+                    </IonReactRouter>
+                </AuthProvider>
             </GuideProivider>
         </ApolloProvider>
     </IonApp>

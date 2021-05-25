@@ -1,13 +1,16 @@
+import { useLazyQuery } from '@apollo/client'
 import firebase from 'firebase/app'
 import React, { useEffect, useState } from 'react'
+import { MeQuery } from '../graphql/queries/users'
 import AuthModal from './shared/AuthModal'
 
 const AuthContext = React.createContext()
 
-const Auth = ({ children }) => {
+const AuthProvider = ({ children }) => {
+    const [getUser, { data, loading, error }] = useLazyQuery(MeQuery)
     const [open, setOpen] = useState(false)
     const [authenticated, setAuthenticated] = useState(false)
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(null)
 
     const handleClose = () => {
         if (!firebase.auth().currentUser) {
@@ -17,17 +20,21 @@ const Auth = ({ children }) => {
     }
 
     useEffect(() => {
+        setUser(data ? data.me : null)
+    }, [data])
+
+    useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged((userDoc) => {
             if (userDoc) {
+                getUser()
                 localStorage.removeItem('dismissAuth')
                 setOpen(false)
                 setAuthenticated(true)
-                setUser(userDoc)
             } else if (!localStorage.getItem('dismissAuth')) {
                 localStorage.removeItem('dismissAuth')
                 setOpen(true)
                 setAuthenticated(false)
-                setUser({})
+                setUser(null)
             }
         })
         return () => unsubscribe()
@@ -37,7 +44,7 @@ const Auth = ({ children }) => {
         showModal: () => setOpen(true),
         isAuthenticated: authenticated,
         logout: () => firebase.auth().signOut(),
-        user: user,
+        user,
     }
 
     return (
@@ -49,4 +56,4 @@ const Auth = ({ children }) => {
 }
 
 export { AuthContext }
-export default Auth
+export default AuthProvider
