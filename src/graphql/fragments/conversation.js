@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import BookingFragment from './booking'
 
 const ConversationFragment = gql`
     fragment ConversationFragment on Conversation {
@@ -13,6 +14,10 @@ const MessageFragment = gql`
         from
         content
         created
+        booking {
+            ...BookingFragment
+        }
+        ${BookingFragment}
     }
 `
 

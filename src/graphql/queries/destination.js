@@ -1,25 +1,17 @@
 import { gql } from '@apollo/client'
-import {
-    TagFragment,
-    ExperienceFragement,
-    DestinationFragment,
-} from '../fragments'
+import { CityFragment, DestinationFragment } from '../fragments'
 
 const SearchDestinationsQuery = gql`
     query SearchDestinationsQuery($input: String) {
-        tags {
-            ...TagFragment
-        }
-        experiences {
-            ...ExperienceFragement
-        }
-        destinations {
+        searchDestinations(input: $input) {
             ...DestinationFragment
+            city {
+                ...CityFragment
+            }
         }
     }
-    ${TagFragment}
-    ${ExperienceFragement}
     ${DestinationFragment}
+    ${CityFragment}
 `
 
 export { SearchDestinationsQuery }
