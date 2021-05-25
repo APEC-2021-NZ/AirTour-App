@@ -9,6 +9,7 @@ import {
     ExperienceFragement,
     DestinationFragment,
     LanguageFragment,
+    ImageFragment,
 } from './helper'
 
 export {
@@ -24,4 +25,5 @@ export {
     ExperienceFragement,
     DestinationFragment,
     LanguageFragment,
+    ImageFragment,
 }

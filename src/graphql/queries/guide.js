@@ -6,15 +6,24 @@ import {
     LanguageFragment,
     CityFragment,
     GuideFragment,
+    ImageFragment,
 } from '../fragments'
 
 const GuidesQuery = gql`
     query GuidesQuery($input: GuidesInput) {
         guides(input: $input) {
             ...GuideFragment
+            city {
+                ...CityFragment
+            }
+            image {
+                ...ImageFragment
+            }
         }
     }
     ${GuideFragment}
+    ${CityFragment}
+    ${ImageFragment}
 `
 
 const GuideQuery = gql`

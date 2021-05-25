@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { IonCard, IonCardContent, IonCol, IonIcon } from '@ionic/react'
-import { heartOutline } from 'ionicons/icons'
+import { heartOutline, heart } from 'ionicons/icons'
 import styles from 'styled-components'
 import { GuideContext } from './GuideContext'
 
@@ -12,6 +12,7 @@ const CustomIcon = styles(IonIcon)`
     padding: 7px;
     background-color: white;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
 `
 
 const TourGuideColumnCard = ({ value: guide }) => {
@@ -45,10 +46,12 @@ const TourGuideColumnCard = ({ value: guide }) => {
                 </IonCardContent>
             </IonCard>
             <CustomIcon
-                icon={heartOutline}
+                onClick={() => alert('test')}
+                icon={guide.liked ? heart : heartOutline}
                 style={{
                     top: 15,
                     right: 15,
+                    color: guide.liked ? 'red' : '',
                 }}
             />
         </IonCol>
