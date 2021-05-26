@@ -1,4 +1,13 @@
-import { IonText, IonContent, IonGrid, IonButton } from '@ionic/react'
+import {
+    IonText,
+    IonContent,
+    IonGrid,
+    IonButton,
+    IonLabel,
+    IonList,
+    IonItem,
+    IonAvatar,
+} from '@ionic/react'
 import styles from 'styled-components'
 import React, { useContext } from 'react'
 import { AuthContext } from '../../components/AuthProvider'
@@ -18,6 +27,90 @@ const Line = styles.hr`
     margin-right: 0px;
     margin-left: 0px;
 `
+
+const conversation1 = {
+    id: 'someID',
+    user: 'user1',
+    guide: 'name',
+    message: [
+        {
+            id: '',
+            user: 'User',
+            content: 'wadup',
+        },
+        {
+            id: '',
+            user: 'User',
+            content: 'wadup',
+        },
+        {
+            id: '',
+            user: 'User',
+            content: 'wadup',
+        },
+        {
+            id: '',
+            user: 'Guide',
+            content: 'wadup',
+        },
+        {
+            id: '',
+            user: 'Guide',
+            content: 'wadup',
+        },
+        {
+            id: '',
+            user: 'User',
+            content: 'wadup',
+        },
+    ],
+    created: '',
+}
+
+const data = [
+    {
+        id: '',
+        user: { id: '123' },
+        guide: { name: 'name1', },
+        message: [
+            {
+                from: { id: '123' },
+                content:
+                    ' you this is very  this is very this is very very long message i dont know what to type',
+            },
+            {
+                from: { id: '' },
+                content: 'Hello world',
+            },
+            {
+                from: { id: '' },
+                content: 'No you',
+            },
+        ],
+    },
+    {
+        id: '',
+        user: { id: '123' },
+        guide: { name: 'name1' },
+        message: [
+            {
+                from: { id: '123' },
+                content: 'Hello world',
+            },
+        ],
+    },
+    {
+        id: '',
+        user: { id: '123' },
+        guide: { name: 'name1' },
+        message: [
+            {
+                from: { id: '123' },
+                content: 'Hello world',
+            },
+        ],
+    },
+]
 
 const Unauthenticated = ({ showModal }) => (
     <>
@@ -59,8 +152,30 @@ const Unauthenticated = ({ showModal }) => (
     </>
 )
 
+const Authenticated = () => {
+    const conversations = data // replace with actual fetching logic
+    return (
+        <IonList>
+            {conversations.map((conversation) => (
+                <IonItem>
+                    <IonAvatar slot="start">
+                        <img src="https://ionicframework.com/docs/demos/api/list/avatar-finn.png" />
+                    </IonAvatar>
+                    <IonLabel>
+                        <h2>{conversation.guide.name}</h2>
+                        <p>{conversation.message[0].content}</p>
+                    </IonLabel>
+                </IonItem>
+            ))}
+        </IonList>
+    )
+}
+
 const Chat = () => {
-    const { showModal, isAuthenticated } = useContext(AuthContext)
+    const { showModal } = useContext(AuthContext)
+
+    const isAuthenticated = true
+
     return (
         <IonContent>
             <IonGrid
@@ -85,7 +200,7 @@ const Chat = () => {
                     </h2>
                 </IonText>
                 <Line />
-                {isAuthenticated && <></>}
+                {isAuthenticated && <Authenticated />}
                 {!isAuthenticated && <Unauthenticated showModal={showModal} />}
             </IonGrid>
         </IonContent>
