@@ -103,12 +103,14 @@ const Wishlist = () => {
                     </h2>
                 </IonText>
                 <Line />
-                {isAuthenticated && (
+                {isAuthenticated && tourGuides.length !== 0 ? (
                     <IonRow>
                         {tourGuides.map((value) => (
                             <TourGuideColumnCard key={value.id} value={value} />
                         ))}
                     </IonRow>
+                ) : (
+                    <p>Wishlist is empty</p>
                 )}
                 {!isAuthenticated && <Unauthenticated showModal={showModal} />}
             </IonGrid>

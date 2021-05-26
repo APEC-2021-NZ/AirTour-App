@@ -89,7 +89,7 @@ const CreateGuideModal = () => {
     const cities = [
         {
             id: 'b0eda78c-e890-42c',
-            name: 'Auckland, New ZealandAuckland, New ZealandAuckland, New Zealand',
+            name: 'Auckland, New Zealand',
         },
         { id: 'b0eda78c-e890-43c1', name: 'Wellington, New Zealand' },
         { id: 'b0eda78c-e890-44c2', name: 'Queenstown, New Zealand' },

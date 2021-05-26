@@ -98,7 +98,7 @@ const App = () => (
                                     path="/bookings"
                                     component={Booking}
                                 />
-                                <Route exact path="/chats" component={Chat} />
+                                <Route path="/chats" component={Chat} />
                                 <Route
                                     exact
                                     path="/profile"
