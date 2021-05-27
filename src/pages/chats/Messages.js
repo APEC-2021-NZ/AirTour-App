@@ -12,6 +12,7 @@ import { IonLoading } from '@ionic/react'
 import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
+import { AuthContext } from '../../components/AuthProvider'
 import { MessageContext } from '../../components/MessageContext'
 import { ConversationQuery } from '../../graphql/queries/conversation'
 import noImage from '../../images/no-image.jpg'
@@ -65,31 +66,27 @@ const Messages = () => {
         },
     })
 
-    const [messages, setMessages] = useState([])
     const [value, setValue] = useState('')
 
-    const { setListener, setCurrent, send } = useContext(MessageContext)
+    const { setCurrent, send, messages, setMessages } =
+        useContext(MessageContext)
 
-    const receiveMessage = (message) => {
-        if (!message) {
-            return
-        }
-        setMessages([...messages, message])
-    }
+    const { user } = useContext(AuthContext)
 
     const conversation = data?.conversation
 
     useEffect(() => {
-        setListener(receiveMessage)
-        setCurrent(conversation?.id)
+        if (conversation) {
+            setCurrent(conversation?.id)
+        }
+
         return () => {
-            setListener()
             setCurrent()
         }
     }, [conversation])
 
     useEffect(() => {
-        if (!conversation || !conversation.message) {
+        if (!conversation) {
             return
         }
         console.log(conversation.messages)
@@ -99,8 +96,6 @@ const Messages = () => {
     if (loading || !conversation) {
         return <IonLoading isOpen />
     }
-
-    console.log(messages)
 
     const userID = conversation.user.id
     const guideID = conversation.guide.id
@@ -122,13 +117,11 @@ const Messages = () => {
                     onChange={(e) => setValue(e)}
                     onSend={() => {
                         send(conversation.id, {
-                            from:
-                                userID === conversation.user.id
-                                    ? conversation.user.id
-                                    : conversation.guide.id,
+                            from: user,
                             content: value,
                             created: new Date(),
                         })
+                        setValue('')
                     }}
                     attachButton={false}
                     placeholder="Type message here"
