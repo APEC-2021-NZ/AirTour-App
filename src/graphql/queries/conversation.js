@@ -8,7 +8,7 @@ import {
 
 const ConversationQuery = gql`
     query ConversationQuery($conversationID: ID!, $limit: Int!, $offset: Int!) {
-        conversation(input: $input) {
+        conversation(conversationID: $conversationID) {
             ...ConversationFragment
             user {
                 ...UserFragment
@@ -37,6 +37,12 @@ const ConverstationsQuery = gql`
                 }
                 guide {
                     ...GuideFragment
+                    user {
+                        ...UserFragment
+                    }
+                }
+                messages(limit: 1, offset: 0) {
+                    ...MessageFragment
                 }
             }
         }
@@ -44,6 +50,7 @@ const ConverstationsQuery = gql`
     ${ConversationFragment}
     ${UserFragment}
     ${GuideFragment}
+    ${MessageFragment}
 `
 
 export { ConversationQuery, ConverstationsQuery }

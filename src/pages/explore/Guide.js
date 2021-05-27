@@ -1,11 +1,13 @@
+import { useMutation, useQuery } from '@apollo/client/react'
+import { SocialSharing } from '@ionic-native/social-sharing'
 import {
+    IonButton,
+    IonCol,
     IonGrid,
     IonIcon,
+    IonLoading,
     IonModal,
     IonRow,
-    IonCol,
-    IonButton,
-    IonLoading,
 } from '@ionic/react'
 import {
     arrowBack,
@@ -15,16 +17,17 @@ import {
     locationOutline,
     shareOutline,
 } from 'ionicons/icons'
-import React, { useContext, useState, useEffect } from 'react'
-import styles from 'styled-components'
+import moment from 'moment'
+import React, { useContext, useEffect, useState } from 'react'
+import { useHistory } from 'react-router'
 import ShowMoreText from 'react-show-more-text'
-import { useQuery } from '@apollo/client/react'
-import { SocialSharing } from '@ionic-native/social-sharing'
-
-import { GuideContext } from '../../components/shared/GuideContext'
+import styles from 'styled-components'
 import { TourGuideColumnCard } from '../../components'
 import { AuthContext } from '../../components/AuthProvider'
-import { GuideQuery, GuidesQuery } from '../../graphql/queries/guide'
+import { GuideContext } from '../../components/shared/GuideContext'
+import { CreateBookingMutation } from '../../graphql/mutations/booking'
+import { CreateConversationMutation } from '../../graphql/mutations/conversation'
+import { GuideQuery } from '../../graphql/queries/guide'
 import noImage from '../../images/no-image.jpg'
 
 const CustomModel = styles(IonModal)`
@@ -99,7 +102,8 @@ const GuideDescription = ({ description }) => (
 )
 
 const Guide = () => {
-    const { showModal, isAuthenticated } = useContext(AuthContext)
+    const history = useHistory()
+    const { showModal, isAuthenticated, user } = useContext(AuthContext)
     const { showGuide, setShowGuide, guideID } = useContext(GuideContext)
     const [image, setImage] = useState('')
 
@@ -112,10 +116,52 @@ const Guide = () => {
             id: guideID,
         },
     })
+    const [createBooking, {}] = useMutation(CreateBookingMutation)
+    const [createConversation, {}] = useMutation(CreateConversationMutation)
 
     useEffect(() => {
         setImage(guideData?.guide?.image.uri || '')
     }, [guideData])
+
+    const handleConnect = async () => {
+        const { guide } = guideData
+        try {
+            const { data } = await createConversation({
+                variables: {
+                    input: {
+                        guideID: guide.id,
+                        startDate: new Date(),
+                        endDate: moment().add(1, 'd'),
+                        numTourists: 1,
+                        content: 'Hello! 👋',
+                    },
+                },
+            })
+            history.push(`/chats/${data.createConversation.id}`)
+            setShowGuide(false)
+        } catch (e) {
+            // Already has an existing conversation with this guide
+            console.error(e)
+        }
+        // try {
+        //     await createBooking({
+        //         variables: {
+        //             input: {
+        //                 touristID: user?.id,
+        //                 guideID: guide.id,
+        //                 startTime: new Date(),
+        //                 endTime: moment().add(1, 'd'),
+        //                 description: 'Expression of interest',
+        //                 confirmedTourist: false,
+        //                 confirmedGuide: false,
+        //                 price: guide.price,
+        //             },
+        //         },
+        //     })
+        // } catch (e) {
+        //     console.error(e)
+        // }
+    }
 
     if (loadingGuide || guideID === '') {
         return <IonLoading open={loadingGuide} />
@@ -263,7 +309,9 @@ const Guide = () => {
                     <IonCol>
                         <IonButton
                             style={{ width: 168 }}
-                            onClick={isAuthenticated ? () => {} : showModal}
+                            onClick={
+                                isAuthenticated ? handleConnect : showModal
+                            }
                         >
                             {isAuthenticated ? 'Connect' : 'Log In'}
                         </IonButton>

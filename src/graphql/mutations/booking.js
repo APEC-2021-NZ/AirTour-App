@@ -20,7 +20,7 @@ const UpdateBookingMutation = gql`
 `
 
 const BookingMutation = gql`
-    mutation Booking(accept: Boolean!) {
+    mutation Booking($accept: Boolean!) {
         booking(accept: $accept) {
             ...BookingFragment
         }

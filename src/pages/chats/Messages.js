@@ -1,57 +1,59 @@
-import React, { useState } from 'react'
+import { useQuery } from '@apollo/client'
 import {
-    MainContainer,
+    Avatar,
     ChatContainer,
-    MessageList,
+    MainContainer,
     Message,
     MessageInput,
-    Avatar,
+    MessageList,
 } from '@chatscope/chat-ui-kit-react'
-
-import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
+import { IonLoading } from '@ionic/react'
 import moment from 'moment'
+import React, { useState } from 'react'
+import { useParams } from 'react-router'
+import { ConversationQuery } from '../../graphql/queries/conversation'
 import noImage from '../../images/no-image.jpg'
 
-const data = {
-    conversation: {
-        id: '1',
-        user: { id: '123', name: 'name123' },
-        guide: { id: '1', name: 'name1' },
-        messages: [
-            {
-                id: '1',
-                from: { id: '123', name: 'name123' },
-                content:
-                    ' you this is very  this is very this is very very long message i dont know what to type',
-                created: new Date(),
-            },
-            {
-                id: '2',
-                from: { id: '1', name: 'name1' },
-                content: 'Hello world',
-                created: new Date(),
-            },
-            {
-                id: '3',
-                from: { id: '123', name: 'name123' },
-                content: 'No you',
-                created: new Date(),
-            },
-            {
-                id: '4',
-                from: { id: '123', name: 'name123' },
-                content: 'Hello world',
-                created: new Date(),
-            },
-            {
-                id: '5',
-                from: { id: '1', name: 'name1' },
-                content: 'Hello world',
-                created: new Date(),
-            },
-        ],
-    },
-}
+// const data = {
+//     conversation: {
+//         id: '1',
+//         user: { id: '123', name: 'name123' },
+//         guide: { id: '1', name: 'name1' },
+//         messages: [
+//             {
+//                 id: '1',
+//                 from: { id: '123', name: 'name123' },
+//                 content:
+//                     ' you this is very  this is very this is very very long message i dont know what to type',
+//                 created: new Date(),
+//             },
+//             {
+//                 id: '2',
+//                 from: { id: '1', name: 'name1' },
+//                 content: 'Hello world',
+//                 created: new Date(),
+//             },
+//             {
+//                 id: '3',
+//                 from: { id: '123', name: 'name123' },
+//                 content: 'No you',
+//                 created: new Date(),
+//             },
+//             {
+//                 id: '4',
+//                 from: { id: '123', name: 'name123' },
+//                 content: 'Hello world',
+//                 created: new Date(),
+//             },
+//             {
+//                 id: '5',
+//                 from: { id: '1', name: 'name1' },
+//                 content: 'Hello world',
+//                 created: new Date(),
+//             },
+//         ],
+//     },
+// }
 
 const MessageConverter = ({ userID, message }) => {
     const { from, content, created } = message
@@ -64,10 +66,11 @@ const MessageConverter = ({ userID, message }) => {
     if (from.id === userID) {
         return (
             <Message
+                id={message.id}
                 model={{
                     message: content,
                     sentTime: moment(created).fromNow(),
-                    sender: from.name,
+                    sender: from.firstname,
                     direction: 'outgoing',
                     position: 'single',
                 }}
@@ -77,10 +80,11 @@ const MessageConverter = ({ userID, message }) => {
 
     return (
         <Message
+            id={message.id}
             model={{
                 message: content,
                 sentTime: moment(message).fromNow(),
-                sender: from.name,
+                sender: from.firstname,
                 direction: 'incoming',
                 position: 'single',
             }}
@@ -91,6 +95,19 @@ const MessageConverter = ({ userID, message }) => {
 }
 
 const Messages = () => {
+    const { conversationID } = useParams()
+    const { data, loading } = useQuery(ConversationQuery, {
+        variables: {
+            conversationID: conversationID,
+            limit: 1000,
+            offset: 0,
+        },
+    })
+
+    if (loading) {
+        return <IonLoading isOpen />
+    }
+
     const { conversation } = data
     const { messages } = conversation
     const userID = conversation.user.id

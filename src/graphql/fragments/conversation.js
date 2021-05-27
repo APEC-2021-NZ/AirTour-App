@@ -11,14 +11,17 @@ const ConversationFragment = gql`
 const MessageFragment = gql`
     fragment MessageFragment on Message {
         id
-        from
+        from {
+            id
+            firstname
+        }
         content
         created
         booking {
             ...BookingFragment
         }
-        ${BookingFragment}
     }
+    ${BookingFragment}
 `
 
 export { ConversationFragment, MessageFragment }
