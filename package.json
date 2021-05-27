@@ -12,12 +12,15 @@
         "lint": "eslint ./src",
         "lint:fix": "eslint --fix ./src",
         "android": "ionic capacitor run android",
-        "build:android": "ionic capacitor copy android"
+        "build:android": "ionic capacitor copy android",
+        "ios": "ionic capacitor run ios",
+        "build:ios": "ionic capacitor copy ios"
     },
     "dependencies": {
         "@apollo/client": "^3.3.19",
         "@capacitor/android": "^2.4.7",
         "@capacitor/core": "2.4.7",
+        "@capacitor/ios": "^2.4.7",
         "@chatscope/chat-ui-kit-react": "^1.7.2",
         "@ionic-native/core": "^5.33.0",
         "@ionic-native/social-sharing": "^5.33.0",
