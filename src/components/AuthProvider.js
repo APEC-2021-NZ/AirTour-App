@@ -1,5 +1,6 @@
 import { useLazyQuery } from '@apollo/client'
 import firebase from 'firebase/app'
+import { refresh } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react'
 import { MeQuery } from '../graphql/queries/users'
 import AuthModal from './shared/AuthModal'
@@ -7,9 +8,12 @@ import AuthModal from './shared/AuthModal'
 const AuthContext = React.createContext()
 
 const AuthProvider = ({ children }) => {
-    const [getUser, { data, loading, error }] = useLazyQuery(MeQuery)
+    const [getUser, { data, loading, error }] = useLazyQuery(MeQuery, {
+        fetchPolicy: 'no-cache',
+    })
     const [open, setOpen] = useState(false)
     const [authenticated, setAuthenticated] = useState(false)
+    const [refreshCount, setRefreshCount] = useState(0)
 
     const handleClose = () => {
         if (!firebase.auth().currentUser) {
@@ -17,6 +21,12 @@ const AuthProvider = ({ children }) => {
         }
         setOpen(false)
     }
+
+    useEffect(() => {
+        if (refreshCount) {
+            getUser()
+        }
+    }, [refreshCount])
 
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged((userDoc) => {
@@ -39,6 +49,7 @@ const AuthProvider = ({ children }) => {
         isAuthenticated: authenticated,
         logout: () => firebase.auth().signOut(),
         user: authenticated ? data?.me : null,
+        refresh: () => setRefreshCount((value) => value + 1),
     }
 
     return (

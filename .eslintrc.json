@@ -5,7 +5,7 @@
         "arrow-body-style": ["error", "as-needed"],
         "curly": ["error", "all"],
         "import/prefer-default-export": 0,
-        "multiline-comment-style": ["error", "starred-block"],
+        "multiline-comment-style": "warn",
         "no-console": "warn",
         "prettier/prettier": [
             "error",

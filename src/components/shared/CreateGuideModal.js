@@ -19,6 +19,7 @@ import { GuideCreateQuery, GuideQuery } from '../../graphql/queries/guide'
 import { AuthContext } from '../AuthProvider'
 import { GuideContext } from './GuideContext'
 import SearchableSelect from './SearchableSelect'
+import { ToastContext } from './ToastProvider'
 
 const buttonStyle = {
     '--color': '#009EA8',
@@ -139,6 +140,8 @@ const Authenticated = () => {
     const { data, loading: isGuideLoading } = useQuery(GuideCreateQuery)
     const [createGuide, _] = useMutation(CreateGuideMutation)
     const { showCreateGuide, setShowCreateGuide } = useContext(GuideContext)
+    const { refresh } = useContext(AuthContext)
+    const { showToast } = useContext(ToastContext)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
     const [blurb, setBlurb] = useState('')
@@ -207,6 +210,13 @@ const Authenticated = () => {
                     },
                 },
             })
+            setError('')
+            setShowCreateGuide(false)
+            showToast({
+                message: 'Guide registration complete!',
+                color: 'success',
+            })
+            refresh()
         } catch (e) {
             console.error(e)
             setError('Something went wrong. Please try again later.')
@@ -230,8 +240,6 @@ const Authenticated = () => {
     if (isGuideLoading) {
         return <IonLoading isOpen />
     }
-
-    console.log(data)
 
     return (
         <IonModal isOpen={showCreateGuide} onDidDismiss={handleClose}>

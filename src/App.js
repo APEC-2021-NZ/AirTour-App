@@ -27,6 +27,7 @@ import { Redirect, Route } from 'react-router-dom'
 import './App.css'
 import { TabBar } from './components'
 import AuthProvider from './components/AuthProvider'
+import ToastProvider from './components/shared/ToastProvider'
 import CreateGuideModal from './components/shared/CreateGuideModal'
 import GuideProivider from './components/shared/GuideContext'
 import { Booking, Empty, Explore, Profile, Wishlist, Guide } from './pages'
@@ -78,38 +79,40 @@ const App = () => (
         <ApolloProvider client={client}>
             <GuideProivider>
                 <AuthProvider>
-                    <IonReactRouter>
-                        <Guide />
-                        <CreateGuideModal />
-                        <TabBar>
-                            <IonRouterOutlet>
-                                <Route
-                                    exact
-                                    path="/explore"
-                                    component={Explore}
-                                />
-                                <Route
-                                    exact
-                                    path="/wishlist"
-                                    component={Wishlist}
-                                />
-                                <Route
-                                    exact
-                                    path="/bookings"
-                                    component={Booking}
-                                />
-                                <Route path="/chats" component={Chat} />
-                                <Route
-                                    exact
-                                    path="/profile"
-                                    component={Profile}
-                                />
-                                <Route exact path="/">
-                                    <Redirect to="/explore" />
-                                </Route>
-                            </IonRouterOutlet>
-                        </TabBar>
-                    </IonReactRouter>
+                    <ToastProvider>
+                        <IonReactRouter>
+                            <Guide />
+                            <CreateGuideModal />
+                            <TabBar>
+                                <IonRouterOutlet>
+                                    <Route
+                                        exact
+                                        path="/explore"
+                                        component={Explore}
+                                    />
+                                    <Route
+                                        exact
+                                        path="/wishlist"
+                                        component={Wishlist}
+                                    />
+                                    <Route
+                                        exact
+                                        path="/bookings"
+                                        component={Booking}
+                                    />
+                                    <Route path="/chats" component={Chat} />
+                                    <Route
+                                        exact
+                                        path="/profile"
+                                        component={Profile}
+                                    />
+                                    <Route exact path="/">
+                                        <Redirect to="/explore" />
+                                    </Route>
+                                </IonRouterOutlet>
+                            </TabBar>
+                        </IonReactRouter>
+                    </ToastProvider>
                 </AuthProvider>
             </GuideProivider>
         </ApolloProvider>
