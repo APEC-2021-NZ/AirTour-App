@@ -42,6 +42,8 @@ const ConverstationsQuery = gql`
         }
     }
     ${ConversationFragment}
+    ${UserFragment}
+    ${GuideFragment}
 `
 
 export { ConversationQuery, ConverstationsQuery }
