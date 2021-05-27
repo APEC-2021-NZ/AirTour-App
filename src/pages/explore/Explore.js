@@ -23,11 +23,15 @@ import Footer from '../../components/Footer'
 import TourGuide from '../../images/tour-guide.jpg'
 import { ExploreQuery } from '../../graphql/queries/explore'
 import { GuideContext } from '../../components/shared/GuideContext'
+import List from './List'
 
 const Booking = () => {
     const { setShowCreateGuide } = useContext(GuideContext)
     const [search, setSearch] = useState('')
     const [showSearch, setShowSearch] = useState(false)
+    const [showList, setShowList] = useState(false)
+    const [listValue, setListValue] = useState('')
+    const [listInput, setListInput] = useState({})
 
     const { loading, data } = useQuery(ExploreQuery)
 
@@ -44,6 +48,12 @@ const Booking = () => {
                 search={search}
                 setSearch={setSearch}
                 close={() => setShowSearch(false)}
+            />
+            <List
+                show={showList}
+                search={listValue}
+                input={listInput}
+                close={() => setShowList(false)}
             />
             <IonGrid
                 style={{
@@ -119,6 +129,11 @@ const Booking = () => {
                             <ImageCardSmallCarousel>
                                 {data?.tags.map((card) => (
                                     <ImageCardSmall
+                                        onSelect={() => {
+                                            setListInput({ tagID: card.id })
+                                            setListValue(card.name)
+                                            setShowList(true)
+                                        }}
                                         uri={card.image.uri}
                                         key={card.name}
                                         name={card.name}
@@ -148,6 +163,13 @@ const Booking = () => {
                             <ImageCardMediumCarousel>
                                 {data?.destinations.map((card) => (
                                     <ImageCardMedium
+                                        onSelect={() => {
+                                            setListInput({
+                                                placeID: card.id,
+                                            })
+                                            setListValue(card.name)
+                                            setShowList(true)
+                                        }}
                                         uri={card.image.uri}
                                         key={card.name}
                                         name={card.name}
@@ -232,6 +254,13 @@ const Booking = () => {
                             <ImageCardMediumCarousel>
                                 {data?.experiences.map((card) => (
                                     <ImageCardMedium
+                                        onSelect={() => {
+                                            setListInput({
+                                                experienceID: card.id,
+                                            })
+                                            setListValue(card.name)
+                                            setShowList(true)
+                                        }}
                                         uri={card.image.uri}
                                         key={card.name}
                                         name={card.name}

@@ -6,10 +6,10 @@ const BookingsQuery = gql`
         bookings {
             ...BookingFragment
             tourist {
-                ...GuideFragment
-            }
-            user {
                 ...UserFragment
+            }
+            guide {
+                ...GuideFragment
             }
         }
     }
@@ -23,10 +23,10 @@ const BookingQuery = gql`
         booking(bookingID: $bookingID) {
             ...BookingFragment
             tourist {
-                ...GuideFragment
-            }
-            user {
                 ...UserFragment
+            }
+            guide {
+                ...GuideFragment
             }
         }
     }

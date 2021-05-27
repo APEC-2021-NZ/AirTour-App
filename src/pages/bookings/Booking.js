@@ -1,7 +1,17 @@
-import { IonText, IonContent, IonGrid, IonButton } from '@ionic/react'
+import {
+    IonText,
+    IonContent,
+    IonGrid,
+    IonButton,
+    IonLoading,
+} from '@ionic/react'
 import styles from 'styled-components'
 import React, { useContext } from 'react'
+import { useQuery } from '@apollo/client'
+
 import { AuthContext } from '../../components/AuthProvider'
+import { BookingsQuery } from '../../graphql/queries/booking'
+import BookingItem from './BookingItem'
 
 const buttonStyle = {
     '--color': '#009EA8',
@@ -60,6 +70,45 @@ const Unauthenticated = ({ showModal }) => (
     </>
 )
 
+const Authenticated = () => {
+    const { data, loading, error } = useQuery(BookingsQuery)
+
+    const bookings = [
+        {
+            id: '1',
+            user: {
+                id: '1',
+                name: 'Me',
+                image: {
+                    uri: 'https://ionicframework.com/docs/demos/api/list/avatar-finn.png',
+                },
+            },
+            guide: {
+                id: '2',
+                name: 'Guide2',
+                image: {
+                    uri: 'https://ionicframework.com/docs/demos/api/list/avatar-finn.png',
+                },
+            },
+            startTime: new Date(),
+            endTime: new Date(),
+            description: 'Fk my life',
+            price: '$10 per day',
+            created: new Date(),
+        },
+    ]
+    return (
+        <>
+            <IonLoading isOpen={loading} />
+
+            {data?.bookings.length === 0 ? <p>Bookings is empty</p> : null}
+            {data?.bookings.map((booking) => (
+                <BookingItem booking={booking} />
+            ))}
+        </>
+    )
+}
+
 const Booking = () => {
     const { showModal, isAuthenticated } = useContext(AuthContext)
     return (
@@ -86,7 +135,7 @@ const Booking = () => {
                     </h2>
                 </IonText>
                 <Line />
-                {isAuthenticated && <></>}
+                {isAuthenticated && <Authenticated />}
                 {!isAuthenticated && <Unauthenticated showModal={showModal} />}
             </IonGrid>
         </IonContent>

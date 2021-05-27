@@ -1,7 +1,8 @@
 import { IonAvatar, IonItem, IonLabel, IonList, IonRow } from '@ionic/react'
-import React from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import { useHistory } from 'react-router'
+import noImage from '../../images/no-image.jpg'
 
 const me = {
     id: '1',
@@ -186,13 +187,19 @@ const Conversation = ({ conversation, userID, guideID }) => {
     const { id, user, guide, messages, created } = conversation
 
     const name = userID === user.id ? guide.name : user.name
-    const image = userID === user.id ? guide.image.uri : user.image.uri
     const lastMessage = messages[0]
+
+    const [image, setImage] = useState(
+        userID === user.id ? guide.image.uri : user.image.uri,
+    )
+    const onError = () => {
+        setImage(noImage)
+    }
 
     return (
         <IonItem onClick={() => history.push(`/chats/${id}`)}>
             <IonAvatar slot="start">
-                <img alt={name} src={image} />
+                <img onError={onError} alt={name} src={image} />
             </IonAvatar>
             <IonLabel>
                 <h2>{name}</h2>

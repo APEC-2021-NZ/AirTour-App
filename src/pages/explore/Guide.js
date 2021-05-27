@@ -15,7 +15,7 @@ import {
     locationOutline,
     shareOutline,
 } from 'ionicons/icons'
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import styles from 'styled-components'
 import ShowMoreText from 'react-show-more-text'
 import { useQuery } from '@apollo/client/react'
@@ -25,6 +25,7 @@ import { GuideContext } from '../../components/shared/GuideContext'
 import { TourGuideColumnCard } from '../../components'
 import { AuthContext } from '../../components/AuthProvider'
 import { GuideQuery, GuidesQuery } from '../../graphql/queries/guide'
+import noImage from '../../images/no-image.jpg'
 
 const CustomModel = styles(IonModal)`
     border-radius: 25px 25px 0px 0px;
@@ -100,12 +101,21 @@ const GuideDescription = ({ description }) => (
 const Guide = () => {
     const { showModal, isAuthenticated } = useContext(AuthContext)
     const { showGuide, setShowGuide, guideID } = useContext(GuideContext)
+    const [image, setImage] = useState('')
+
+    const onError = () => {
+        setImage(noImage)
+    }
 
     const { data: guideData, loading: loadingGuide } = useQuery(GuideQuery, {
         variables: {
             id: guideID,
         },
     })
+
+    useEffect(() => {
+        setImage(guideData?.guide?.image.uri || '')
+    }, [guideData])
 
     if (loadingGuide || guideID === '') {
         return <IonLoading open={loadingGuide} />
@@ -125,13 +135,14 @@ const Guide = () => {
             fullscreen
         >
             <img
+                onError={onError}
                 style={{
                     padding: 0,
                     height: 236,
                     objectFit: 'cover',
                 }}
                 alt={guide.name}
-                src={guide.image.uri}
+                src={image}
             />
             <IonGrid style={{ width: '100%', padding: '0px 20px 0px 20px' }}>
                 <p
