@@ -10,51 +10,11 @@ import {
 import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import { IonLoading } from '@ionic/react'
 import moment from 'moment'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
+import { MessageContext } from '../../components/MessageContext'
 import { ConversationQuery } from '../../graphql/queries/conversation'
 import noImage from '../../images/no-image.jpg'
-
-// const data = {
-//     conversation: {
-//         id: '1',
-//         user: { id: '123', name: 'name123' },
-//         guide: { id: '1', name: 'name1' },
-//         messages: [
-//             {
-//                 id: '1',
-//                 from: { id: '123', name: 'name123' },
-//                 content:
-//                     ' you this is very  this is very this is very very long message i dont know what to type',
-//                 created: new Date(),
-//             },
-//             {
-//                 id: '2',
-//                 from: { id: '1', name: 'name1' },
-//                 content: 'Hello world',
-//                 created: new Date(),
-//             },
-//             {
-//                 id: '3',
-//                 from: { id: '123', name: 'name123' },
-//                 content: 'No you',
-//                 created: new Date(),
-//             },
-//             {
-//                 id: '4',
-//                 from: { id: '123', name: 'name123' },
-//                 content: 'Hello world',
-//                 created: new Date(),
-//             },
-//             {
-//                 id: '5',
-//                 from: { id: '1', name: 'name1' },
-//                 content: 'Hello world',
-//                 created: new Date(),
-//             },
-//         ],
-//     },
-// }
 
 const MessageConverter = ({ userID, message }) => {
     const { from, content, created } = message
@@ -105,12 +65,43 @@ const Messages = () => {
         },
     })
 
-    if (loading) {
+    const [messages, setMessages] = useState([])
+    const [value, setValue] = useState('')
+
+    const { setListener, setCurrent, send } = useContext(MessageContext)
+
+    const receiveMessage = (message) => {
+        if (!message) {
+            return
+        }
+        setMessages([...messages, message])
+    }
+
+    const conversation = data?.conversation
+
+    useEffect(() => {
+        setListener(receiveMessage)
+        setCurrent(conversation?.id)
+        return () => {
+            setListener()
+            setCurrent()
+        }
+    }, [conversation])
+
+    useEffect(() => {
+        if (!conversation || !conversation.message) {
+            return
+        }
+        console.log(conversation.messages)
+        setMessages([...conversation.messages].reverse())
+    }, [conversation])
+
+    if (loading || !conversation) {
         return <IonLoading isOpen />
     }
 
-    const { conversation } = data
-    const { messages } = conversation
+    console.log(messages)
+
     const userID = conversation.user.id
     const guideID = conversation.guide.id
     return (
@@ -119,6 +110,7 @@ const Messages = () => {
                 <MessageList>
                     {messages.map((message) => (
                         <MessageConverter
+                            key={message.id}
                             userID={userID}
                             guideID={guideID}
                             message={message}
@@ -126,6 +118,18 @@ const Messages = () => {
                     ))}
                 </MessageList>
                 <MessageInput
+                    value={value}
+                    onChange={(e) => setValue(e)}
+                    onSend={() => {
+                        send(conversation.id, {
+                            from:
+                                userID === conversation.user.id
+                                    ? conversation.user.id
+                                    : conversation.guide.id,
+                            content: value,
+                            created: new Date(),
+                        })
+                    }}
                     attachButton={false}
                     placeholder="Type message here"
                 />

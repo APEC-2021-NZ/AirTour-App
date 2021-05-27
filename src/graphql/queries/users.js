@@ -8,6 +8,9 @@ const MeQuery = gql`
             guide {
                 id
             }
+            conversations {
+                id
+            }
         }
     }
     ${UserFragment}

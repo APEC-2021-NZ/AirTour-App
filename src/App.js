@@ -34,6 +34,7 @@ import { Booking, Empty, Explore, Profile, Wishlist, Guide } from './pages'
 import Chat from './pages/chats'
 /* Theme variables */
 import './theme/variables.css'
+import MessageProivider from './components/MessageContext'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyC-wQRkTYQokjy2gkuU7dXWWePA__rIEug',
@@ -80,38 +81,40 @@ const App = () => (
             <GuideProivider>
                 <AuthProvider>
                     <ToastProvider>
-                        <IonReactRouter>
-                            <Guide />
-                            <CreateGuideModal />
-                            <TabBar>
-                                <IonRouterOutlet>
-                                    <Route
-                                        exact
-                                        path="/explore"
-                                        component={Explore}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/wishlist"
-                                        component={Wishlist}
-                                    />
-                                    <Route
-                                        exact
-                                        path="/bookings"
-                                        component={Booking}
-                                    />
-                                    <Route path="/chats" component={Chat} />
-                                    <Route
-                                        exact
-                                        path="/profile"
-                                        component={Profile}
-                                    />
-                                    <Route exact path="/">
-                                        <Redirect to="/explore" />
-                                    </Route>
-                                </IonRouterOutlet>
-                            </TabBar>
-                        </IonReactRouter>
+                        <MessageProivider>
+                            <IonReactRouter>
+                                <Guide />
+                                <CreateGuideModal />
+                                <TabBar>
+                                    <IonRouterOutlet>
+                                        <Route
+                                            exact
+                                            path="/explore"
+                                            component={Explore}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/wishlist"
+                                            component={Wishlist}
+                                        />
+                                        <Route
+                                            exact
+                                            path="/bookings"
+                                            component={Booking}
+                                        />
+                                        <Route path="/chats" component={Chat} />
+                                        <Route
+                                            exact
+                                            path="/profile"
+                                            component={Profile}
+                                        />
+                                        <Route exact path="/">
+                                            <Redirect to="/explore" />
+                                        </Route>
+                                    </IonRouterOutlet>
+                                </TabBar>
+                            </IonReactRouter>
+                        </MessageProivider>
                     </ToastProvider>
                 </AuthProvider>
             </GuideProivider>
