@@ -7,6 +7,7 @@ import {
     MessageInput,
     MessageList,
 } from '@chatscope/chat-ui-kit-react'
+import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import { IonLoading } from '@ionic/react'
 import moment from 'moment'
 import React, { useState } from 'react'
