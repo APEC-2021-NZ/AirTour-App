@@ -137,6 +137,7 @@ const Unauthenticated = () => {
 
 const Authenticated = () => {
     const { data, loading: isGuideLoading } = useQuery(GuideCreateQuery)
+    const [createGuide, _] = useMutation(CreateGuideMutation)
     const { showCreateGuide, setShowCreateGuide } = useContext(GuideContext)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -149,7 +150,68 @@ const Authenticated = () => {
     const [destinations, setDestinations] = useState([])
     const [tags, setTags] = useState([])
 
-    const handleSubmit = async () => {}
+    const handleSubmit = async () => {
+        if (!blurb) {
+            setError('A blurb is required')
+            return
+        }
+
+        if (!price) {
+            setError('A price is required')
+            return
+        }
+
+        if (!description) {
+            setError('A description is required')
+            return
+        }
+
+        if (!city) {
+            setError('A city is required')
+            return
+        }
+
+        if (!languages.length) {
+            setError('At least one language is required')
+            return
+        }
+
+        if (!experiences.length) {
+            setError('At least one experience is required')
+            return
+        }
+
+        if (!destinations.length) {
+            setError('At least one destination is required')
+            return
+        }
+
+        if (!tags.length) {
+            setError('At least one tag is required')
+            return
+        }
+
+        try {
+            await createGuide({
+                variables: {
+                    input: {
+                        active: true,
+                        cityID: city.id,
+                        blurb,
+                        description,
+                        price,
+                        languageIDs: languages.map((l) => l.id),
+                        experienceIDs: experiences.map((m) => m.id),
+                        destinationIDs: destinations.map((d) => d.id),
+                        tagIDs: tags.map((t) => t.id),
+                    },
+                },
+            })
+        } catch (e) {
+            console.error(e)
+            setError('Something went wrong. Please try again later.')
+        }
+    }
 
     const handleClose = () => {
         if (!loading) {
@@ -170,23 +232,6 @@ const Authenticated = () => {
     }
 
     console.log(data)
-
-    const cities = [
-        {
-            id: 'b0eda78c-e890-42c',
-            name: 'Auckland, New Zealand',
-        },
-        { id: 'b0eda78c-e890-43c1', name: 'Wellington, New Zealand' },
-        { id: 'b0eda78c-e890-44c2', name: 'Queenstown, New Zealand' },
-        { id: 'b0eda78c-123e890-45c3', name: 'Tokyo, Japan' },
-        { id: 'b0eda78c-143e890-asf42c', name: 'Auckland, New Zealand' },
-        { id: 'b0eda78c-e890-43sadfc1', name: 'Wellington, New Zealand' },
-        { id: 'b0eda78c-e8490-44asdfc2', name: 'Queenstown, New Zealand' },
-        { id: 'b0eda78c-e89141220-45asdfc3', name: 'Tokyo, Japan' },
-        { id: 'b0eda78c-e890-4asdf2c', name: 'Auckland, New Zealand' },
-        { id: 'b0eda781e8912e890-44asdfc2', name: 'Queenstown, New Zealand' },
-        { id: 'b0eda78c-e891230-45asdfc3', name: 'Tokyo, Japan' },
-    ]
 
     return (
         <IonModal isOpen={showCreateGuide} onDidDismiss={handleClose}>
@@ -272,7 +317,7 @@ const Authenticated = () => {
                     onChange={setCity}
                     getOptionName={(item) => item.name}
                     placeholder="City"
-                    options={cities}
+                    options={data.cities}
                     searchKeys={['name']}
                 />
 
@@ -281,7 +326,7 @@ const Authenticated = () => {
                     onChange={setLanguages}
                     getOptionName={(item) => item.name}
                     placeholder="Languages"
-                    options={cities}
+                    options={data.languages}
                     searchKeys={['name']}
                     multiple
                 />
@@ -291,7 +336,7 @@ const Authenticated = () => {
                     onChange={setExperiences}
                     getOptionName={(item) => item.name}
                     placeholder="Experiences"
-                    options={cities}
+                    options={data.experiences}
                     searchKeys={['name']}
                     multiple
                 />
@@ -301,7 +346,7 @@ const Authenticated = () => {
                     onChange={setDestinations}
                     getOptionName={(item) => item.name}
                     placeholder="Destinations"
-                    options={cities}
+                    options={data.destinations}
                     searchKeys={['name']}
                     multiple
                 />
@@ -311,7 +356,7 @@ const Authenticated = () => {
                     onChange={setTags}
                     getOptionName={(item) => item.name}
                     placeholder="Tags"
-                    options={cities}
+                    options={data.tags}
                     searchKeys={['name']}
                     multiple
                 />
