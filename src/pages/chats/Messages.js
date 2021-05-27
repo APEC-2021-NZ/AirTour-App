@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import {
     Avatar,
     ChatContainer,
@@ -7,13 +7,14 @@ import {
     MessageInput,
     MessageList,
 } from '@chatscope/chat-ui-kit-react'
-import styles from '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import { IonLoading } from '@ionic/react'
 import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { AuthContext } from '../../components/AuthProvider'
 import { MessageContext } from '../../components/MessageContext'
+import { MessageMutation } from '../../graphql/mutations/message'
 import { ConversationQuery } from '../../graphql/queries/conversation'
 import noImage from '../../images/no-image.jpg'
 
@@ -57,6 +58,7 @@ const MessageConverter = ({ userID, message }) => {
 }
 
 const Messages = () => {
+    const [sendMessage, {}] = useMutation(MessageMutation)
     const { conversationID } = useParams()
     const { data, loading } = useQuery(ConversationQuery, {
         variables: {
@@ -64,6 +66,7 @@ const Messages = () => {
             limit: 1000,
             offset: 0,
         },
+        fetchPolicy: 'no-cache',
     })
 
     const [value, setValue] = useState('')
@@ -97,6 +100,23 @@ const Messages = () => {
         return <IonLoading isOpen />
     }
 
+    const handleSend = async () => {
+        sendMessage({
+            variables: {
+                input: {
+                    conversationID: conversation.id,
+                    content: value,
+                },
+            },
+        })
+        send(conversation.id, {
+            from: user,
+            content: value,
+            created: new Date(),
+        })
+        setValue('')
+    }
+
     const userID = conversation.user.id
     const guideID = conversation.guide.id
     return (
@@ -115,14 +135,7 @@ const Messages = () => {
                 <MessageInput
                     value={value}
                     onChange={(e) => setValue(e)}
-                    onSend={() => {
-                        send(conversation.id, {
-                            from: user,
-                            content: value,
-                            created: new Date(),
-                        })
-                        setValue('')
-                    }}
+                    onSend={handleSend}
                     attachButton={false}
                     placeholder="Type message here"
                 />

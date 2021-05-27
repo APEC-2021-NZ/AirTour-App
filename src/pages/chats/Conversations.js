@@ -14,7 +14,9 @@ import { ConverstationsQuery } from '../../graphql/queries/conversation'
 import noImage from '../../images/no-image.jpg'
 
 const Conversations = () => {
-    const { data, loading } = useQuery(ConverstationsQuery)
+    const { data, loading } = useQuery(ConverstationsQuery, {
+        fetchPolicy: 'no-cache',
+    })
 
     if (loading || !data) {
         return <IonLoading isOpen />
