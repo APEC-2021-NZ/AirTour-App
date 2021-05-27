@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client'
 import {
     IonButton,
     IonGrid,
@@ -13,6 +14,9 @@ import {
 } from '@ionic/react'
 import { closeOutline } from 'ionicons/icons'
 import React, { useContext, useState } from 'react'
+import { CreateGuideMutation } from '../../graphql/mutations/guide'
+import { GuideCreateQuery, GuideQuery } from '../../graphql/queries/guide'
+import { AuthContext } from '../AuthProvider'
 import { GuideContext } from './GuideContext'
 import SearchableSelect from './SearchableSelect'
 
@@ -57,7 +61,82 @@ const SmallText = ({ children }) => (
     </IonText>
 )
 
-const CreateGuideModal = () => {
+const Unauthenticated = () => {
+    const { showModal } = useContext(AuthContext)
+    const { showCreateGuide, setShowCreateGuide } = useContext(GuideContext)
+
+    const handleClose = () => setShowCreateGuide(false)
+
+    return (
+        <IonModal isOpen={showCreateGuide} onDidDismiss={handleClose}>
+            <IonGrid
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    maxWidth: '360px',
+                    marginTop: '75px',
+                }}
+            >
+                <IonRow>
+                    <IonText color="primary">
+                        <h2
+                            style={{
+                                fontFamily: 'Comfortaa',
+                                fontStyle: 'normal',
+                                fontWeight: 'normal',
+                                fontSize: '24px',
+                                lineHeight: '27px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                letterSpacing: '-0.015em',
+                                padding: '5px',
+                            }}
+                        >
+                            Become a Guide
+                        </h2>
+                    </IonText>
+                </IonRow>
+
+                <IonRow>
+                    <IonText color="primary">
+                        <p
+                            style={{
+                                fontFamily: 'Roboto',
+                                fontStyle: 'normal',
+                                fontWeight: '200',
+                                fontSize: '14px',
+                                lineHeight: '16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                letterSpacing: '0.04em',
+                                padding: '5px',
+                            }}
+                        >
+                            Anyone can become a guide, all you need to do is
+                            login or sign up.
+                        </p>
+                    </IonText>
+                </IonRow>
+
+                <IonButton
+                    fill="clear"
+                    onClick={handleClose}
+                    style={{
+                        position: 'fixed',
+                        top: 20,
+                        right: 20,
+                    }}
+                >
+                    <IonIcon icon={closeOutline} />
+                </IonButton>
+            </IonGrid>
+        </IonModal>
+    )
+}
+
+const Authenticated = () => {
+    const { data, loading: isGuideLoading } = useQuery(GuideCreateQuery)
     const { showCreateGuide, setShowCreateGuide } = useContext(GuideContext)
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -85,6 +164,12 @@ const CreateGuideModal = () => {
             setShowCreateGuide(false)
         }
     }
+
+    if (isGuideLoading) {
+        return <IonLoading isOpen />
+    }
+
+    console.log(data)
 
     const cities = [
         {
@@ -283,6 +368,88 @@ const CreateGuideModal = () => {
             </IonGrid>
         </IonModal>
     )
+}
+
+const Registered = () => {
+    const { showCreateGuide, setShowCreateGuide } = useContext(GuideContext)
+
+    const handleClose = () => setShowCreateGuide(false)
+
+    return (
+        <IonModal isOpen={showCreateGuide} onDidDismiss={handleClose}>
+            <IonGrid
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    width: '100%',
+                    maxWidth: '360px',
+                    marginTop: '75px',
+                }}
+            >
+                <IonRow>
+                    <IonText color="primary">
+                        <h2
+                            style={{
+                                fontFamily: 'Comfortaa',
+                                fontStyle: 'normal',
+                                fontWeight: 'normal',
+                                fontSize: '24px',
+                                lineHeight: '27px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                letterSpacing: '-0.015em',
+                                padding: '5px',
+                            }}
+                        >
+                            Become a Guide
+                        </h2>
+                    </IonText>
+                </IonRow>
+
+                <IonRow>
+                    <IonText color="primary">
+                        <p
+                            style={{
+                                fontFamily: 'Roboto',
+                                fontStyle: 'normal',
+                                fontWeight: '200',
+                                fontSize: '14px',
+                                lineHeight: '16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                letterSpacing: '0.04em',
+                                padding: '5px',
+                            }}
+                        >
+                            You&apos;re already registered as a guide.
+                        </p>
+                    </IonText>
+                </IonRow>
+
+                <IonButton
+                    fill="clear"
+                    onClick={handleClose}
+                    style={{
+                        position: 'fixed',
+                        top: 20,
+                        right: 20,
+                    }}
+                >
+                    <IonIcon icon={closeOutline} />
+                </IonButton>
+            </IonGrid>
+        </IonModal>
+    )
+}
+
+const CreateGuideModal = () => {
+    const { isAuthenticated, user } = useContext(AuthContext)
+
+    if (user?.guide) {
+        return <Registered />
+    }
+
+    return isAuthenticated ? <Authenticated /> : <Unauthenticated />
 }
 
 export default CreateGuideModal

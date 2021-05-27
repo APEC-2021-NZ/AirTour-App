@@ -10,7 +10,6 @@ const AuthProvider = ({ children }) => {
     const [getUser, { data, loading, error }] = useLazyQuery(MeQuery)
     const [open, setOpen] = useState(false)
     const [authenticated, setAuthenticated] = useState(false)
-    const [user, setUser] = useState(null)
 
     const handleClose = () => {
         if (!firebase.auth().currentUser) {
@@ -18,10 +17,6 @@ const AuthProvider = ({ children }) => {
         }
         setOpen(false)
     }
-
-    useEffect(() => {
-        setUser(data ? data.me : null)
-    }, [data])
 
     useEffect(() => {
         const unsubscribe = firebase.auth().onAuthStateChanged((userDoc) => {
@@ -34,7 +29,6 @@ const AuthProvider = ({ children }) => {
                 localStorage.removeItem('dismissAuth')
                 setOpen(true)
                 setAuthenticated(false)
-                setUser(null)
             }
         })
         return () => unsubscribe()
@@ -44,7 +38,7 @@ const AuthProvider = ({ children }) => {
         showModal: () => setOpen(true),
         isAuthenticated: authenticated,
         logout: () => firebase.auth().signOut(),
-        user,
+        user: authenticated ? data?.me : null,
     }
 
     return (

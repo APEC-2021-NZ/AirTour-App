@@ -7,6 +7,7 @@ import {
     IonText,
     IonIcon,
     IonLabel,
+    IonLoading,
 } from '@ionic/react'
 import React, { useContext } from 'react'
 import {
@@ -14,8 +15,10 @@ import {
     helpOutline,
     personOutline,
     settingsOutline,
+    navigateOutline,
 } from 'ionicons/icons'
 import { AuthContext } from '../../components/AuthProvider'
+import { GuideContext } from '../../components/shared/GuideContext'
 
 const buttonStyle = {
     '--color': '#009EA8',
@@ -99,36 +102,49 @@ const Unauthenticated = ({ showModal }) => (
     </>
 )
 
-const Authenticated = ({ logout }) => (
-    <>
-        <IonButton onClick={logout} fill="outline" style={buttonStyle}>
-            Log out
-        </IonButton>
-        <IonList>
-            <IonItem />
-            <IonItem button>
-                <IonIcon slot="end" icon={settingsOutline} />
-                <IonLabel style={textStyle}>Settings</IonLabel>
-            </IonItem>
-            <IonItem button>
-                <IonIcon slot="end" icon={personOutline} />
-                <IonLabel style={textStyle}>Learn about touring</IonLabel>
-            </IonItem>
-            <IonItem button>
-                <IonIcon slot="end" icon={helpOutline} />
-                <IonLabel style={textStyle}>Get Help</IonLabel>
-            </IonItem>
-            <IonItem button>
-                <IonIcon slot="end" icon={documentTextOutline} />
-                <IonLabel style={textStyle}>Terms of Serice</IonLabel>
-            </IonItem>
-        </IonList>
-    </>
-)
+const Authenticated = ({ user, logout }) => {
+    const { setShowCreateGuide } = useContext(GuideContext)
+    return (
+        <>
+            <IonButton onClick={logout} fill="outline" style={buttonStyle}>
+                Log out
+            </IonButton>
+            <IonList>
+                <IonItem />
+                {!user.guide && (
+                    <IonItem button onClick={() => setShowCreateGuide(true)}>
+                        <IonIcon slot="end" icon={navigateOutline} />
+                        <IonLabel style={textStyle}>Become a Guide</IonLabel>
+                    </IonItem>
+                )}
+                <IonItem button>
+                    <IonIcon slot="end" icon={settingsOutline} />
+                    <IonLabel style={textStyle}>Settings</IonLabel>
+                </IonItem>
+                <IonItem button>
+                    <IonIcon slot="end" icon={personOutline} />
+                    <IonLabel style={textStyle}>Learn about touring</IonLabel>
+                </IonItem>
+                <IonItem button>
+                    <IonIcon slot="end" icon={helpOutline} />
+                    <IonLabel style={textStyle}>Get Help</IonLabel>
+                </IonItem>
+                <IonItem button>
+                    <IonIcon slot="end" icon={documentTextOutline} />
+                    <IonLabel style={textStyle}>Terms of Serice</IonLabel>
+                </IonItem>
+            </IonList>
+        </>
+    )
+}
 
 const Profile = () => {
     const { showModal, isAuthenticated, logout, user } = useContext(AuthContext)
-    console.log(user)
+
+    if (isAuthenticated && !user) {
+        return <IonLoading isOpen />
+    }
+
     return (
         <IonContent>
             <IonGrid
@@ -152,7 +168,9 @@ const Profile = () => {
                         Your profile
                     </h2>
                 </IonText>
-                {isAuthenticated && <Authenticated logout={logout} />}
+                {isAuthenticated && (
+                    <Authenticated user={user} logout={logout} />
+                )}
                 {!isAuthenticated && <Unauthenticated showModal={showModal} />}
             </IonGrid>
         </IonContent>

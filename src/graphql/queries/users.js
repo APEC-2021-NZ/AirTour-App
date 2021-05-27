@@ -5,6 +5,9 @@ const MeQuery = gql`
     query Me {
         me {
             ...UserFragment
+            guide {
+                id
+            }
         }
     }
     ${UserFragment}

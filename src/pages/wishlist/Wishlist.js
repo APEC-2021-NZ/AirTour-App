@@ -74,7 +74,7 @@ const Wishlist = () => {
         image: c.image.uri,
         city: `${c.city.name}, ${c.city.country.name}`,
         description: c.description,
-        rating: c.rating.toFixed(2),
+        rating: c.rating,
         numReviews: c.numReviews,
         liked: true,
     }))
