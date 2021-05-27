@@ -25,6 +25,7 @@ const Conversations = () => {
 
     return (
         <IonList>
+            {conversations.length === 0 ? <p>Conversations is empty</p> : null}
             {conversations.map((conversation) => (
                 <Conversation
                     userID={userID}
@@ -40,13 +41,14 @@ const Conversation = ({ conversation, userID, guideID }) => {
     const history = useHistory()
     const { id, user, guide, messages, created } = conversation
     const lastMessage = messages[0]
+    console.log(userID, user.id)
     const name =
         userID === user.id
             ? `${guide.user.firstname} ${guide.user.surname}`
             : `${user.firstname} ${user.surname}`
 
     const [image, setImage] = useState(
-        userID === user.id ? guide.image.uri : user.image.uri,
+        userID === user.id ? guide.user.image.uri : user.image.uri,
     )
     const onError = () => {
         setImage(noImage)

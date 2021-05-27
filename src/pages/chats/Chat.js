@@ -84,9 +84,7 @@ const Authenticated = () => {
 }
 
 const Chat = () => {
-    const { showModal } = useContext(AuthContext)
-
-    const isAuthenticated = true
+    const { showModal, isAuthenticated } = useContext(AuthContext)
 
     return (
         <IonContent>

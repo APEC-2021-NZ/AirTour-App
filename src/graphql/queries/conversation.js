@@ -30,6 +30,7 @@ const ConversationQuery = gql`
 const ConverstationsQuery = gql`
     query ConverstationsQuery {
         me {
+            id
             conversations {
                 ...ConversationFragment
                 user {

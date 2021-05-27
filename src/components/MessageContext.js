@@ -6,7 +6,7 @@ import { ToastContext } from './shared/ToastProvider'
 
 export const MessageContext = createContext()
 
-const ENDPOINT = 'http://localhost:3001' // 'https://airtour.herokuapp.com/'
+const ENDPOINT = 'https://airtour.herokuapp.com/'
 
 const socketIO = socketIOClient(ENDPOINT, {
     query: {
@@ -26,12 +26,10 @@ const MessageProivider = ({ children }) => {
     useEffect(() => {
         socketIO.removeAllListeners('message')
         socketIO.on('message', ({ conversation, message }) => {
-            console.log('test', conversation, 'test', current)
             if (current === conversation) {
                 if (!message) {
                     return
                 }
-                console.log(message)
                 setMessages([...messages, message])
             } else {
                 showToast({
