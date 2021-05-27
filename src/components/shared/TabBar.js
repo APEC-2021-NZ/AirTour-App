@@ -28,7 +28,7 @@ const TabBar = ({ children }) => {
                 </IonTabButton>
                 <IonTabButton tab="wishlist" href="/wishlist">
                     <IonIcon icon={heartOutline} />
-                    <IonLabel>Wishlists</IonLabel>
+                    <IonLabel>Wishlist</IonLabel>
                 </IonTabButton>
                 <IonTabButton tab="bookings" href="/bookings">
                     <IonIcon icon={peopleOutline} />

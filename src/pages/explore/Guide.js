@@ -27,6 +27,10 @@ import { AuthContext } from '../../components/AuthProvider'
 import { GuideContext } from '../../components/shared/GuideContext'
 import { CreateBookingMutation } from '../../graphql/mutations/booking'
 import { CreateConversationMutation } from '../../graphql/mutations/conversation'
+import {
+    AddToWishlistMutation,
+    RemoveFromWishlistMutation,
+} from '../../graphql/mutations/wishlist'
 import { GuideQuery } from '../../graphql/queries/guide'
 import noImage from '../../images/no-image.jpg'
 
@@ -102,8 +106,11 @@ const GuideDescription = ({ description }) => (
 )
 
 const Guide = () => {
+    const [addToWishlist, {}] = useMutation(AddToWishlistMutation)
+    const [removeFromWishlist, {}] = useMutation(RemoveFromWishlistMutation)
     const history = useHistory()
-    const { showModal, isAuthenticated, user } = useContext(AuthContext)
+    const { showModal, isAuthenticated, user, refresh } =
+        useContext(AuthContext)
     const { showGuide, setShowGuide, guideID } = useContext(GuideContext)
     const [image, setImage] = useState('')
 
@@ -272,12 +279,30 @@ const Guide = () => {
                 }}
             />
             <CustomIcon
-                onClick={() => alert('test')}
+                onClick={async () => {
+                    if (user?.wishlist) {
+                        if (user.wishlist.includes(guide.id)) {
+                            await removeFromWishlist({
+                                variables: {
+                                    guideID: guide.id,
+                                },
+                            })
+                        } else {
+                            await addToWishlist({
+                                variables: {
+                                    guideID: guide.id,
+                                },
+                            })
+                        }
+                        refresh()
+                    }
+                }}
                 icon={heartOutline}
                 style={{
                     top: 30,
                     right: 20,
                     cursor: 'pointer',
+                    color: user?.wishlist?.includes(guide.id) ? 'red' : '',
                 }}
             />
             <IonGrid

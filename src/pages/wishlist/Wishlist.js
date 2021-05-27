@@ -12,6 +12,7 @@ import styles from 'styled-components'
 import { TourGuideColumnCard } from '../../components'
 import { GuidesQuery } from '../../graphql/queries/guide'
 import { AuthContext } from '../../components/AuthProvider'
+import guide from '../../graphql/fragments/guide'
 
 const buttonStyle = {
     '--color': '#009EA8',
@@ -46,7 +47,8 @@ const Unauthenticated = ({ showModal }) => (
                     marginBottom: 32,
                 }}
             >
-                Collect places to go and things to do by tapping the heart icon.
+                Collect places to go and things to do by tapping the heart icon
+                on guides you like.
             </p>
         </IonText>
         <IonButton onClick={showModal} fill="outline" style={buttonStyle}>
@@ -68,16 +70,21 @@ const Wishlist = () => {
     if (loading) {
         return <IonLoading open={loading} />
     }
+    console.log(data)
+    // const tourGuides = (data?.guides || []).map((c) => ({
+    //     id: c.id,
+    //     image: {
+    //         uri: c.image.uri,
+    //     },
+    //     city: `${c.city.name}, ${c.city.country.name}`,
+    //     description: c.description,
+    //     rating: c.rating,
+    //     numReviews: c.numReviews,
+    //     liked: true,
+    // }))
 
-    const tourGuides = (data?.guides || []).map((c) => ({
-        id: c.id,
-        image: c.image.uri,
-        city: `${c.city.name}, ${c.city.country.name}`,
-        description: c.description,
-        rating: c.rating,
-        numReviews: c.numReviews,
-        liked: true,
-    }))
+    const tourGuides = data?.guides || []
+    console.log(tourGuides)
 
     return (
         <IonContent>
@@ -99,7 +106,7 @@ const Wishlist = () => {
                             letterSpacing: '-0.015em',
                         }}
                     >
-                        Wishlists
+                        Wishlist
                     </h2>
                 </IonText>
                 <Line />
@@ -110,7 +117,7 @@ const Wishlist = () => {
                         ))}
                     </IonRow>
                 ) : (
-                    <p>Wishlist is empty</p>
+                    <p>Your wishlist is empty 😢</p>
                 )}
                 {!isAuthenticated && <Unauthenticated showModal={showModal} />}
             </IonGrid>

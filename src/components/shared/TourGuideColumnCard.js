@@ -1,9 +1,15 @@
-import React, { useContext, useState } from 'react'
+import { useMutation } from '@apollo/client'
 import { IonCard, IonCardContent, IonCol, IonIcon } from '@ionic/react'
-import { heartOutline, heart } from 'ionicons/icons'
+import { heart, heartOutline } from 'ionicons/icons'
+import React, { useContext, useState } from 'react'
 import styles from 'styled-components'
-import { GuideContext } from './GuideContext'
+import {
+    AddToWishlistMutation,
+    RemoveFromWishlistMutation,
+} from '../../graphql/mutations/wishlist'
 import noImage from '../../images/no-image.jpg'
+import { AuthContext } from '../AuthProvider'
+import { GuideContext } from './GuideContext'
 
 const CustomIcon = styles(IonIcon)`
     position: absolute;
@@ -17,6 +23,9 @@ const CustomIcon = styles(IonIcon)`
 `
 
 const TourGuideColumnCard = ({ value: guide }) => {
+    const [addToWishlist, {}] = useMutation(AddToWishlistMutation)
+    const [removeFromWishlist, {}] = useMutation(RemoveFromWishlistMutation)
+    const { user, refresh } = useContext(AuthContext)
     const { setShowGuide, setGuideID } = useContext(GuideContext)
     const [image, setImage] = useState(guide.image.uri)
 
@@ -33,7 +42,14 @@ const TourGuideColumnCard = ({ value: guide }) => {
             sizeXs="6"
         >
             <IonCard
-                style={{ cursor: 'pointer', borderRadius: 15, margin: 5 }}
+                style={{
+                    cursor: 'pointer',
+                    borderRadius: 15,
+                    margin: 5,
+                    height: '300px',
+                    overflow: 'scrollbar',
+                    objectFit: 'cover',
+                }}
                 onClick={() => {
                     setGuideID(guide.id)
                     setShowGuide(true)
@@ -44,23 +60,46 @@ const TourGuideColumnCard = ({ value: guide }) => {
                     src={image}
                     style={{ objectFit: 'cover' }}
                     alt="Tour Guide Portrait"
+                    height="162.5px"
                 />
-                <IonCardContent style={{ fontSize: 12, color: '#000000' }}>
+                <IonCardContent
+                    style={{
+                        fontSize: 12,
+                        color: '#000000',
+                    }}
+                >
                     {`★ ${guide.rating.toFixed(2)} (${guide.numReviews}) - ${
                         guide.city?.name
                     }, ${guide.city?.country?.name}`}
                     <br />
                     <br />
-                    {guide.description}
+                    {guide.blurb}
                 </IonCardContent>
             </IonCard>
             <CustomIcon
-                onClick={() => alert('test')}
+                onClick={async () => {
+                    if (user?.wishlist) {
+                        if (user.wishlist.includes(guide.id)) {
+                            await removeFromWishlist({
+                                variables: {
+                                    guideID: guide.id,
+                                },
+                            })
+                        } else {
+                            await addToWishlist({
+                                variables: {
+                                    guideID: guide.id,
+                                },
+                            })
+                        }
+                        refresh()
+                    }
+                }}
                 icon={guide.liked ? heart : heartOutline}
                 style={{
                     top: 15,
                     right: 15,
-                    color: guide.liked ? 'red' : '',
+                    color: user?.wishlist?.includes(guide.id) ? 'red' : '',
                 }}
             />
         </IonCol>

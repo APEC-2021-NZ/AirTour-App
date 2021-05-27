@@ -48,7 +48,13 @@ const AuthProvider = ({ children }) => {
         showModal: () => setOpen(true),
         isAuthenticated: authenticated,
         logout: () => firebase.auth().signOut(),
-        user: authenticated ? data?.me : null,
+        user:
+            authenticated && data
+                ? {
+                      ...data.me,
+                      wishlist: data.guides.map((g) => g.id),
+                  }
+                : null,
         refresh: () => setRefreshCount((value) => value + 1),
     }
 

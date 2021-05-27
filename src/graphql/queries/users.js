@@ -12,6 +12,9 @@ const MeQuery = gql`
                 id
             }
         }
+        guides(input: { onWishlist: true }) {
+            id
+        }
     }
     ${UserFragment}
 `
