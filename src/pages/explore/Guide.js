@@ -24,6 +24,7 @@ import ShowMoreText from 'react-show-more-text'
 import styles from 'styled-components'
 import { TourGuideColumnCard } from '../../components'
 import { AuthContext } from '../../components/AuthProvider'
+import { MessageContext } from '../../components/MessageContext'
 import { GuideContext } from '../../components/shared/GuideContext'
 import { CreateBookingMutation } from '../../graphql/mutations/booking'
 import { CreateConversationMutation } from '../../graphql/mutations/conversation'
@@ -113,6 +114,7 @@ const Guide = () => {
         useContext(AuthContext)
     const { showGuide, setShowGuide, guideID } = useContext(GuideContext)
     const [image, setImage] = useState('')
+    const { join } = useContext(MessageContext)
 
     const onError = () => {
         setImage(noImage)
@@ -144,6 +146,7 @@ const Guide = () => {
                     },
                 },
             })
+            join(data.createConversation.id)
             history.push(`/chats/${data.createConversation.id}`)
             setShowGuide(false)
         } catch (e) {

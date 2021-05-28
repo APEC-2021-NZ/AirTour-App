@@ -50,8 +50,12 @@ if (firebase.apps.length === 0) {
     firebase.initializeApp(firebaseConfig)
 }
 
+const uri =
+    process.env.REACT_APP_GRAPHQL ||
+    'https://airtour-backend-qziqjrz2rq-ts.a.run.app/graphql'
+
 const httpLink = createHttpLink({
-    uri: process.env.REACT_APP_GRAPHQL,
+    uri,
 })
 
 const authLink = setContext(async (_, { headers }) => {
@@ -71,7 +75,7 @@ const authLink = setContext(async (_, { headers }) => {
 
 const client = new ApolloClient({
     link: authLink.concat(httpLink),
-    uri: process.env.REACT_APP_GRAPHQL,
+    uri,
     cache: new InMemoryCache(),
 })
 

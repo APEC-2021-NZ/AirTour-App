@@ -14,7 +14,8 @@
         "android": "ionic capacitor run android",
         "build:android": "ionic capacitor copy android",
         "ios": "ionic capacitor run ios",
-        "build:ios": "ionic capacitor copy ios"
+        "build:ios": "ionic capacitor copy ios",
+        "build:android:release": "ionic capacitor run android --prod"
     },
     "dependencies": {
         "@apollo/client": "^3.3.19",
