@@ -65,12 +65,13 @@ const Wishlist = () => {
                 onWishlist: true,
             },
         },
+        fetchPolicy: 'no-cache',
     })
 
     if (loading) {
         return <IonLoading open={loading} />
     }
-    console.log(data)
+    console.log(user)
     // const tourGuides = (data?.guides || []).map((c) => ({
     //     id: c.id,
     //     image: {
@@ -85,7 +86,7 @@ const Wishlist = () => {
 
     const tourGuides = data?.guides || []
     console.log(tourGuides)
-
+    console.log(user)
     return (
         <IonContent>
             <IonGrid
