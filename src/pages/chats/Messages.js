@@ -22,11 +22,28 @@ const MessageConverter = ({ userID, message }) => {
     const { from, content, created } = message
     const [image, setImage] = useState(from?.image?.uri)
 
+    const { user } = useContext(AuthContext)
+
     const onError = () => {
         setImage(noImage)
     }
 
-    if (from.id === userID) {
+    if (user.id === userID) {
+        if (from.id === userID) {
+            return (
+                <Message
+                    id={message.id}
+                    model={{
+                        message: content,
+                        sentTime: moment(created).fromNow(),
+                        sender: from.firstname,
+                        direction: 'outgoing',
+                        position: 'single',
+                    }}
+                />
+            )
+        }
+    } else if (from.id !== userID) {
         return (
             <Message
                 id={message.id}
