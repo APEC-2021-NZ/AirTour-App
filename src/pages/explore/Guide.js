@@ -195,6 +195,7 @@ const Guide = () => {
                 style={{
                     padding: 0,
                     height: 236,
+                    width: '100%',
                     objectFit: 'cover',
                 }}
                 alt={guide.name}

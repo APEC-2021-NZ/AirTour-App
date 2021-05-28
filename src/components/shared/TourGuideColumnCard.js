@@ -58,7 +58,7 @@ const TourGuideColumnCard = ({ value: guide }) => {
                 <img
                     onError={onError}
                     src={image}
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: 'cover', width: '100%' }}
                     alt="Tour Guide Portrait"
                     height="162.5px"
                 />
