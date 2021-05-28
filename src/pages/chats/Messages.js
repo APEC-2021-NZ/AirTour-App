@@ -71,8 +71,13 @@ const Messages = () => {
 
     const [value, setValue] = useState('')
 
-    const { setCurrent, send, messages, setMessages } =
-        useContext(MessageContext)
+    const {
+        setCurrent,
+        send,
+        messages,
+        setMessages,
+        loading: isMessagesLoading,
+    } = useContext(MessageContext)
 
     const { user } = useContext(AuthContext)
 
@@ -96,7 +101,7 @@ const Messages = () => {
         setMessages([...conversation.messages].reverse())
     }, [conversation])
 
-    if (loading || !conversation) {
+    if (loading || !conversation || true) {
         return <IonLoading isOpen />
     }
 

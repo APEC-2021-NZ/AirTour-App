@@ -18,6 +18,7 @@ const MessageProivider = ({ children }) => {
     const [socket, setSocket] = useState()
     const [current, setCurrent] = useState('')
     const [messages, setMessages] = useState([])
+    const [loading, setLoading] = useState(true)
     const history = useHistory()
 
     const { showToast } = useContext(ToastContext)
@@ -40,6 +41,8 @@ const MessageProivider = ({ children }) => {
                 })
             }
         })
+        socketIO.on('connect', () => setLoading(true))
+        socketIO.on('disconnect', () => setLoading(false))
 
         setSocket(socketIO)
     }, [current, messages])
