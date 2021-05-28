@@ -8,7 +8,7 @@ const Loading = ({ loading, error, component }) => {
     useEffect(() => {
         setTimeout(() => {
             setCarouselChildren(component)
-        }, 0)
+        }, 500)
     }, [component])
 
     if (loading) {
