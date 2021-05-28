@@ -101,7 +101,7 @@ const Messages = () => {
         setMessages([...conversation.messages].reverse())
     }, [conversation])
 
-    if (loading || !conversation || true) {
+    if (loading || !conversation || isMessagesLoading) {
         return <IonLoading isOpen />
     }
 
