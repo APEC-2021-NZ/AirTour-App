@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "app",
+  "appId": "app.netlify.airtour",
+  "appName": "AirTour",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",

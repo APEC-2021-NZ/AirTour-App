@@ -15,7 +15,10 @@
         "build:android": "ionic capacitor copy android",
         "ios": "ionic capacitor run ios",
         "build:ios": "ionic capacitor copy ios",
-        "build:android:release": "ionic capacitor run android --prod"
+        "build:android:release": "ionic capacitor run android --prod",
+        "build:iod:release": "ionic capacitor run ios --prod",
+        "android:icon": "cordova-res android --skip-config --copy",
+        "ios:icon": "cordova-res ios --skip-config --copy"
     },
     "dependencies": {
         "@apollo/client": "^3.3.19",
